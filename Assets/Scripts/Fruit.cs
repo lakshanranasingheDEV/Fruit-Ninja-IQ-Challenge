@@ -44,6 +44,7 @@ public class Fruit : MonoBehaviour
 {
     public GameObject fruitSlicingPrefab; // Prefab for the sliced fruit effect
     public float startForce = 15f; // Force to apply when the fruit spawns
+    public bool harmful; // Flag to indicate if this fruit is harmful
 
     private Rigidbody2D rb;
 
@@ -57,15 +58,13 @@ public class Fruit : MonoBehaviour
     {
         if (col.CompareTag("Blade"))
         {
-            // Calculate direction of the blade for proper slicing effect
+            // Spawn slicing effect
             Vector3 direction = (col.transform.position - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Quaternion rotation = Quaternion.Euler(0, 0, angle);
 
-            // Instantiate the sliced fruit prefab
             GameObject slicedFruit = Instantiate(fruitSlicingPrefab, transform.position, rotation);
 
-            // Add scattering effect to sliced pieces
             Rigidbody2D[] slicedParts = slicedFruit.GetComponentsInChildren<Rigidbody2D>();
             foreach (Rigidbody2D part in slicedParts)
             {
@@ -73,11 +72,29 @@ public class Fruit : MonoBehaviour
                 part.AddForce(force * 5f, ForceMode2D.Impulse);
             }
 
-            // Destroy the sliced fruit effect after 3 seconds
             Destroy(slicedFruit, 3f);
-
-            // Destroy the original fruit
             Destroy(gameObject);
+
+            // Update score
+            if (harmful)
+            {
+                GameManager.Instance.SubtractLife();
+            }
+            else
+            {
+                SpawnSlicingEffect();
+                GameManager.Instance.AddScore(1); // Add points for normal fruits
+            }
         }
+
+    }
+
+    private void SpawnSlicingEffect()
+    {
+        Vector3 direction = (transform.position - Camera.main.transform.position).normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        GameObject slicedFruit = Instantiate(fruitSlicingPrefab, transform.position, Quaternion.Euler(0, 0, angle));
+        Destroy(slicedFruit, 3f);
     }
 }

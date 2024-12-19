@@ -40,10 +40,13 @@ using UnityEngine;
 public class FruitSpawner : MonoBehaviour
 {
     public GameObject[] fruitPrefabs; // Array to hold multiple fruit prefabs
+    public GameObject bombPrefab;    // Bomb prefab
     public Transform[] spawnPoints;   // Array of spawn points
 
     public float minDelay = 0.1f;     // Minimum delay between spawns
     public float maxDelay = 1.0f;     // Maximum delay between spawns
+
+    private int fruitCounter = 0;     // Counter to track fruits spawned
 
     private void Start()
     {
@@ -61,15 +64,27 @@ public class FruitSpawner : MonoBehaviour
             int spawnIndex = Random.Range(0, spawnPoints.Length);
             Transform spawnPoint = spawnPoints[spawnIndex];
 
-            // Randomly pick a fruit prefab
-            int fruitIndex = Random.Range(0, fruitPrefabs.Length);
-            GameObject fruitPrefab = fruitPrefabs[fruitIndex];
+            GameObject prefabToSpawn;
 
-            // Spawn the fruit at the chosen spawn point
-            GameObject spawnedFruit = Instantiate(fruitPrefab, spawnPoint.position, spawnPoint.rotation);
+            if (fruitCounter < 5)
+            {
+                // Spawn a fruit
+                int fruitIndex = Random.Range(0, fruitPrefabs.Length);
+                prefabToSpawn = fruitPrefabs[fruitIndex];
+                fruitCounter++; // Increment the fruit counter
+            }
+            else
+            {
+                // Spawn a bomb after 5 fruits
+                prefabToSpawn = bombPrefab;
+                fruitCounter = 0; // Reset the counter
+            }
 
-            // Destroy the fruit after 5 seconds
-            Destroy(spawnedFruit, 5f);
+            // Spawn the chosen prefab
+            GameObject spawnedObject = Instantiate(prefabToSpawn, spawnPoint.position, spawnPoint.rotation);
+
+            // Destroy the spawned object after 5 seconds
+            Destroy(spawnedObject, 5f);
         }
     }
 }

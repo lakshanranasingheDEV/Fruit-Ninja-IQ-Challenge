@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2101897022, guid: e2876da481dd4f74ba12ad735edf5ec1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fruitSlicingPrefab: {fileID: 362671414405760217, guid: ed98d4abf6fd1cc43aeaf55041643aa0, type: 3}
   startForce: 11.85
+  harmful: 0
 --- !u!58 &-4486560027197527881
 CircleCollider2D:
   m_ObjectHideFlags: 0

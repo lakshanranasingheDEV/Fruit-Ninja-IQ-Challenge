@@ -185,6 +185,7 @@ MonoBehaviour:
   fruitPrefabs:
   - {fileID: 4785411272269670130, guid: 9b7f1c1bd383c3347b38bec15284c52b, type: 3}
   - {fileID: 4785411272269670130, guid: 786d7c521fb8fbe47a7b3e46bfd4b0b5, type: 3}
+  - {fileID: 3582999811506262255, guid: e8dc5b2fcbc25f8449a387c44b229dfa, type: 3}
   spawnPoints:
   - {fileID: 959788916}
   - {fileID: 2046054837}
@@ -550,10 +551,6 @@ MonoBehaviour:
   _mainCuttingVelocity: 0.001
   _isCutting: 0
   _previousPosition: {x: 0, y: 0}
-  currentBladeTrail: {fileID: 0}
-  rb: {fileID: 0}
-  cam: {fileID: 0}
-  circleCollider: {fileID: 0}
 --- !u!4 &1819681830
 Transform:
   m_ObjectHideFlags: 0
