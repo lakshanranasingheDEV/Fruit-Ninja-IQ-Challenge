@@ -13,7 +13,7 @@ public class ScoreText : MonoBehaviour
         set
         {
             score = value;
-            GetComponent<Text>().text = "Score: " + score;
+            GetComponent<Text>().text = score.ToString(); ;
         }
     }
 
