@@ -100,9 +100,9 @@ using UnityEngine.UI;
 using System.Collections;
 
 
-public class GameManager : MonoBehaviour
+public class NinjaGameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    public static NinjaGameManager Instance;
 
     public Text scoreText;
     public Image[] lifeIcons; // Array of life UI icons
