@@ -205,9 +205,8 @@ public class Game : MonoBehaviour
     }
 
 }
-
 */
-/*
+
 
 using System.Collections;
 using System.Collections.Generic;
@@ -231,31 +230,47 @@ public class Game : MonoBehaviour
     // Game Ending
     private bool gameOver = false;
 
-
     public void Start()
     {
-        // Initialize white pieces
-        playerWhite = new GameObject[] { Create("white_rook", 0, 0), Create("white_knight", 1, 0),
-            Create("white_bishop", 2, 0), Create("white_queen", 3, 0), Create("white_king", 4, 0),
-            Create("white_bishop", 5, 0), Create("white_knight", 6, 0), Create("white_rook", 7, 0),
-            Create("white_pawn", 0, 1), Create("white_pawn", 1, 1), Create("white_pawn", 2, 1),
-            Create("white_pawn", 3, 1), Create("white_pawn", 4, 1), Create("white_pawn", 5, 1),
-            Create("white_pawn", 6, 1), Create("white_pawn", 7, 1) };
+        // Randomly select and place 3 white pieces
+        string[] whitePieceOptions = { "white_rook", "white_knight", "white_bishop", "white_queen", "white_king", "white_pawn" };
+        playerWhite = RandomlyPlacePieces(whitePieceOptions, 3, "white");
 
-        // Initialize black pieces
-        playerBlack = new GameObject[] { Create("black_rook", 0, 7), Create("black_knight", 1, 7),
-            Create("black_bishop", 2, 7), Create("black_queen", 3, 7), Create("black_king", 4, 7),
-            Create("black_bishop", 5, 7), Create("black_knight", 6, 7), Create("black_rook", 7, 7),
-            Create("black_pawn", 0, 6), Create("black_pawn", 1, 6), Create("black_pawn", 2, 6),
-            Create("black_pawn", 3, 6), Create("black_pawn", 4, 6), Create("black_pawn", 5, 6),
-            Create("black_pawn", 6, 6), Create("black_pawn", 7, 6) };
-
-        for (int i = 0; i < playerBlack.Length; i++)
-        {
-            SetPosition(playerBlack[i]);
-            SetPosition(playerWhite[i]);
-        }
+        // Randomly select and place 1 black piece
+        string[] blackPieceOptions = { "black_rook", "black_knight", "black_bishop", "black_queen", "black_king", "black_pawn" };
+        playerBlack = RandomlyPlacePieces(blackPieceOptions, 1, "black");
     }
+
+    // Helper function to randomly place pieces
+    private GameObject[] RandomlyPlacePieces(string[] pieceOptions, int count, string playerColor)
+    {
+        List<GameObject> placedPieces = new List<GameObject>();
+        HashSet<Vector2> occupiedPositions = new HashSet<Vector2>();
+
+        for (int i = 0; i < count; i++)
+        {
+            string pieceName = pieceOptions[Random.Range(0, pieceOptions.Length)];
+
+            // Find a random unoccupied position
+            Vector2 position;
+            do
+            {
+                int x = Random.Range(0, 8);
+                int y = Random.Range(playerColor == "white" ? 0 : 6, playerColor == "white" ? 2 : 8); // White starts near the bottom, black near the top
+                position = new Vector2(x, y);
+            } while (occupiedPositions.Contains(position));
+
+            occupiedPositions.Add(position);
+
+            // Create and place the piece
+            GameObject piece = Create(pieceName, (int)position.x, (int)position.y);
+            placedPieces.Add(piece);
+            SetPosition(piece);
+        }
+
+        return placedPieces.ToArray();
+    }
+
 
     public GameObject Create(string name, int x, int y)
     {
@@ -268,14 +283,16 @@ public class Game : MonoBehaviour
         return obj;
     }
 
-    
     public void SetPosition(GameObject obj)
     {
         Chessman cm = obj.GetComponent<Chessman>();
         positions[cm.GetXBoard(), cm.GetYBoard()] = obj;
     }
-   
 
+    public void SetPositionEmpty(int x, int y)
+    {
+        positions[x, y] = null;
+    }
 
     public GameObject GetPosition(int x, int y)
     {
@@ -308,6 +325,7 @@ public class Game : MonoBehaviour
         yield return new WaitForSeconds(1.0f); // Delay for AI thinking simulation
 
         List<GameObject> blackPieces = new List<GameObject>(playerBlack); // List of all black pieces
+
         bool moveMade = false;
 
         while (!moveMade && blackPieces.Count > 0)
@@ -318,36 +336,23 @@ public class Game : MonoBehaviour
             // Call InitiateMovePlates() for the selected piece to determine valid moves
             piece.GetComponent<Chessman>().InitiateMovePlates();
 
-            // Retrieve attackable positions (positions occupied by white pieces)
-            List<Vector2> attackMoves = CollectAttackMoves(new List<GameObject>(playerWhite));
+            // Retrieve valid move positions from the move plates
+            List<Vector2> validMoves = CollectValidMovesFromPlates();
 
-            if (attackMoves.Count > 0)
+            if (validMoves.Count > 0)
             {
-                // If attack moves are available, perform the attack
-                Vector2 target = attackMoves[0]; // Prioritize the first attackable position
+                // Pick a random valid move
+                int moveIndex = Random.Range(0, validMoves.Count);
+                Vector2 target = validMoves[moveIndex];
+
+                // Move the piece to the selected target
                 MovePiece(piece, (int)target.x, (int)target.y);
                 moveMade = true;
             }
             else
             {
-                // Retrieve valid move positions from the move plates
-                List<Vector2> validMoves = CollectValidMovesFromPlates();
-
-                if (validMoves.Count > 0)
-                {
-                    // Pick a random valid move
-                    int moveIndex = Random.Range(0, validMoves.Count);
-                    Vector2 target = validMoves[moveIndex];
-
-                    // Move the piece to the selected target
-                    MovePiece(piece, (int)target.x, (int)target.y);
-                    moveMade = true;
-                }
-                else
-                {
-                    // Remove the piece from the list if it has no valid moves
-                    blackPieces.RemoveAt(randIndex);
-                }
+                // Remove the piece from the list if it has no valid moves
+                blackPieces.RemoveAt(randIndex);
             }
 
             // Clear move plates to reset the board UI
@@ -357,34 +362,6 @@ public class Game : MonoBehaviour
         // Switch back to the player's turn
         NextTurn();
     }
-
-    private List<Vector2> CollectAttackMoves(List<GameObject> whitePieces)
-    {
-        List<Vector2> attackMoves = new List<Vector2>();
-
-        foreach (GameObject movePlate in GameObject.FindGameObjectsWithTag("MovePlate"))
-        {
-            MovePlate mpScript = movePlate.GetComponent<MovePlate>();
-            int targetX = mpScript.GetX();
-            int targetY = mpScript.GetY();
-
-            // Check if a white piece occupies the target position
-            foreach (GameObject whitePiece in whitePieces)
-            {
-                Chessman cm = whitePiece.GetComponent<Chessman>();
-                if (cm.GetXBoard() == targetX && cm.GetYBoard() == targetY)
-                {
-                    attackMoves.Add(new Vector2(targetX, targetY));
-                    break;
-                }
-            }
-        }
-
-        return attackMoves;
-    }
-
-
-
 
     private List<Vector2> CollectValidMovesFromPlates()
     {
@@ -449,16 +426,9 @@ public class Game : MonoBehaviour
         }
     }
 
-    
-    public void SetPositionEmpty(int x, int y)
-    {
-        positions[x, y] = null; // Mark the position as empty by setting it to null
-    } 
-
 }
-*/
 
-
+/* Black attack part
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -615,33 +585,7 @@ public class Game : MonoBehaviour
         NextTurn();
     }
 
-    /*
-    private List<Vector2> CollectAttackMoves(List<GameObject> whitePieces)
-    {
-        List<Vector2> attackMoves = new List<Vector2>();
-
-        foreach (GameObject movePlate in GameObject.FindGameObjectsWithTag("MovePlate"))
-        {
-            if (movePlate == null) continue; // Skip if the move plate was destroyed
-            MovePlate mpScript = movePlate.GetComponent<MovePlate>();
-            int targetX = mpScript.GetX();
-            int targetY = mpScript.GetY();
-
-            foreach (GameObject whitePiece in whitePieces)
-            {
-                if (whitePiece == null) continue; // Skip if the white piece was destroyed
-                Chessman cm = whitePiece.GetComponent<Chessman>();
-                if (cm.GetXBoard() == targetX && cm.GetYBoard() == targetY)
-                {
-                    attackMoves.Add(new Vector2(targetX, targetY));
-                    break;
-                }
-            }
-        }
-
-        return attackMoves;
-    }
-    */
+   
 
     private List<Vector2> CollectAttackMoves(List<GameObject> whitePieces)
     {
@@ -810,3 +754,5 @@ public class Game : MonoBehaviour
 
 
 }
+
+*/
