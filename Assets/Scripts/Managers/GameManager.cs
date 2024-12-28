@@ -4,9 +4,9 @@ using Yunash.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-
 
 namespace Yunash.Game
 {
@@ -25,10 +25,8 @@ namespace Yunash.Game
         public Image[] lifeIcons; // Array of life UI icons
         public Sprite lostLifeSprite; // Sprite to display when a life is lost
 
-
         private int score = 0;
         private int lives = 3; // Total number of lives
-
 
         private void Awake()
         {
@@ -38,7 +36,9 @@ namespace Yunash.Game
                 Instance = this;
             }
             else
+            {
                 Instance = this;
+            }
 
             if (uiManager == null || audioManager == null || dataManager == null)
             {
@@ -55,15 +55,13 @@ namespace Yunash.Game
             LoadGameData();
             UpdateScoreUI();
             UpdateLivesUI();
-            
+            DeleteSavedGameData();
         }
 
         public void AddScore(int amount)
         {
             score += amount;
             UpdateScoreUI();
-
-
         }
 
         public void SubtractLife()
@@ -87,7 +85,6 @@ namespace Yunash.Game
 
         private void UpdateLivesUI()
         {
-            // Update the UI sprites for lives
             for (int i = 0; i < lifeIcons.Length; i++)
             {
                 if (i < lives)
@@ -123,22 +120,50 @@ namespace Yunash.Game
 
         private void SaveGameData()
         {
-            // Create a SaveGameData object to store score and lives
             SaveGameData saveData = new SaveGameData(score, lives);
-
-            // Save the game data using DataManager
             dataManager.SaveData(saveData, "gameData.json");
         }
 
         private void LoadGameData()
         {
-            // Load the game data when the game starts
             if (dataManager.TryLoadData("gameData.json", out SaveGameData loadedData))
             {
                 score = loadedData.score;
-
                 lives = loadedData.lives;
             }
+        }
+
+        public void DeleteSavedGameData()
+        {
+            string path = Path.Combine(Application.persistentDataPath, "gameData.json");
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                Debug.Log("Saved game data deleted successfully.");
+            }
+            else
+            {
+                Debug.LogWarning("No saved game data found to delete.");
+            }
+        }
+
+        public void OnDeleteSaveDataButtonClick()
+        {
+            DeleteSavedGameData();
+        }
+    }
+
+    [Serializable]
+    public class SaveGameData
+    {
+        public int score;
+        public int lives;
+
+        public SaveGameData(int score, int lives)
+        {
+            this.score = score;
+            this.lives = lives;
         }
     }
 }
