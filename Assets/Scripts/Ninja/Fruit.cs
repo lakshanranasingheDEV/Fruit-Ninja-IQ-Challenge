@@ -39,6 +39,7 @@ public class Fruit : MonoBehaviour
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Yunash.Game;
 
 public class Fruit : MonoBehaviour
 {
@@ -83,11 +84,11 @@ public class Fruit : MonoBehaviour
             // Update score
             if (harmful)
             {
-                NinjaGameManager.Instance.SubtractLife();
+                GameManager.Instance.SubtractLife();
             }
             else
             {
-                NinjaGameManager.Instance.AddScore(1); // Add points for normal fruits
+                GameManager.Instance.AddScore(1); // Add points for normal fruits
             }
         }
 

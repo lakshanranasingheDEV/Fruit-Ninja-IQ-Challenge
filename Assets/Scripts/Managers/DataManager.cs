@@ -25,7 +25,6 @@ namespace Yunash.Data
         {
             if (audioData == null)
                 throw new NullReferenceException("One or more Data File(s) missing.");
-            
         }
 
         public void SaveData<T>(T dataObject, string fileName) where T : class
@@ -35,7 +34,7 @@ namespace Yunash.Data
             string path = Path.Combine(Application.persistentDataPath, fileName);
             File.WriteAllText(path, json);
 
-            Debug.Log($"Saved {fileName} JSON to path{path}");
+            Debug.Log($"Saved {fileName} JSON to path {path}");
         }
 
         public bool TryLoadData<T>(string fileName, out T dataObject) where T : class
@@ -56,4 +55,16 @@ namespace Yunash.Data
         }
     }
 
+    [System.Serializable]
+    public class SaveGameData
+    {
+        public int score;
+        public int lives;
+
+        public SaveGameData(int score, int lives)
+        {
+            this.score = score;
+            this.lives = lives;
+        }
+    }
 }

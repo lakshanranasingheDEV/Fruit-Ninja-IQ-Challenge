@@ -5,6 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 namespace Yunash.Game
 {
@@ -14,21 +16,29 @@ namespace Yunash.Game
         [SerializeField] private AudioManager audioManager;
         [SerializeField] private DataManager dataManager;
 
-        private static GameManager instance;
-        public static GameManager Instance => instance;
+        public static GameManager Instance;
         public IUIService UIService;
         public IAudioService AudioService;
         public IDataService DataService;
 
+        public Text scoreText;
+        public Image[] lifeIcons; // Array of life UI icons
+        public Sprite lostLifeSprite; // Sprite to display when a life is lost
+
+
+        private int score = 0;
+        private int lives = 3; // Total number of lives
+
+
         private void Awake()
         {
-            if (instance != null)
+            if (Instance != null)
             {
-                Destroy(instance);
-                instance = this;
+                Destroy(Instance);
+                Instance = this;
             }
             else
-                instance = this;
+                Instance = this;
 
             if (uiManager == null || audioManager == null || dataManager == null)
             {
@@ -39,6 +49,96 @@ namespace Yunash.Game
             AudioService = audioManager;
             DataService = dataManager;
         }
+
+        private void Start()
+        {
+            LoadGameData();
+            UpdateScoreUI();
+            UpdateLivesUI();
+            
+        }
+
+        public void AddScore(int amount)
+        {
+            score += amount;
+            UpdateScoreUI();
+
+
+        }
+
+        public void SubtractLife()
+        {
+            if (lives > 0)
+            {
+                lives--;
+                UpdateLivesUI();
+
+                if (lives <= 0)
+                {
+                    GameOver();
+                }
+            }
+        }
+
+        private void UpdateScoreUI()
+        {
+            scoreText.text = score.ToString();
+        }
+
+        private void UpdateLivesUI()
+        {
+            // Update the UI sprites for lives
+            for (int i = 0; i < lifeIcons.Length; i++)
+            {
+                if (i < lives)
+                {
+                    lifeIcons[i].enabled = true; // Keep full lives visible
+                }
+                else
+                {
+                    lifeIcons[i].sprite = lostLifeSprite; // Change to lost life sprite
+                }
+            }
+        }
+
+        private void GameOver()
+        {
+            if (LoginCanvas.Instance != null && LoginCanvas.Instance.gameOverPanel != null)
+            {
+                LoginCanvas.Instance.gameOverPanel.SetActive(true); // Show Game Over panel
+            }
+            else
+            {
+                Debug.LogError("GameManager: GameOver: LoginCanvas or GameOverPanel is not set!");
+            }
+
+            Time.timeScale = 0f; // Pause the game
+        }
+
+        public void RestartGame()
+        {
+            Time.timeScale = 1f; // Resume the game
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Main Game"); // Load the scene by name
+        }
+
+        private void SaveGameData()
+        {
+            // Create a SaveGameData object to store score and lives
+            SaveGameData saveData = new SaveGameData(score, lives);
+
+            // Save the game data using DataManager
+            dataManager.SaveData(saveData, "gameData.json");
+        }
+
+        private void LoadGameData()
+        {
+            // Load the game data when the game starts
+            if (dataManager.TryLoadData("gameData.json", out SaveGameData loadedData))
+            {
+                score = loadedData.score;
+
+                lives = loadedData.lives;
+            }
+        }
     }
 }
-
