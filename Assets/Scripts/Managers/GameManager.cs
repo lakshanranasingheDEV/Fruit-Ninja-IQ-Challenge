@@ -28,6 +28,9 @@ namespace Yunash.Game
         private int score = 0;
         private int lives = 3; // Total number of lives
 
+        private const string ScoreKey = "PlayerScore"; // Key for saving the score
+        private const string LivesKey = "PlayerLives"; // Key for saving lives
+
         private void Awake()
         {
             if (Instance != null)
@@ -52,16 +55,16 @@ namespace Yunash.Game
 
         private void Start()
         {
-            LoadGameData();
+            LoadGameProgress();
             UpdateScoreUI();
             UpdateLivesUI();
-            DeleteSavedGameData();
         }
 
         public void AddScore(int amount)
         {
             score += amount;
             UpdateScoreUI();
+            SaveGameProgress(); 
         }
 
         public void SubtractLife()
@@ -70,6 +73,7 @@ namespace Yunash.Game
             {
                 lives--;
                 UpdateLivesUI();
+                SaveGameProgress(); // Save progress when lives change
 
                 if (lives <= 0)
                 {
@@ -118,52 +122,24 @@ namespace Yunash.Game
             UnityEngine.SceneManagement.SceneManager.LoadScene("Main Game"); // Load the scene by name
         }
 
-        private void SaveGameData()
+        private void SaveGameProgress()
         {
-            SaveGameData saveData = new SaveGameData(score, lives);
-            dataManager.SaveData(saveData, "gameData.json");
+            PlayerPrefs.SetInt(ScoreKey, score);
+            PlayerPrefs.SetInt(LivesKey, lives);
+            PlayerPrefs.Save();
         }
 
-        private void LoadGameData()
+        private void LoadGameProgress()
         {
-            if (dataManager.TryLoadData("gameData.json", out SaveGameData loadedData))
-            {
-                score = loadedData.score;
-                lives = loadedData.lives;
-            }
+            score = PlayerPrefs.GetInt(ScoreKey, 0); // Default to 0 if no score is saved
+            lives = PlayerPrefs.GetInt(LivesKey, 3); // Default to 3 lives if no data is saved
         }
 
-        public void DeleteSavedGameData()
+        public void ResetGameProgress()
         {
-            string path = Path.Combine(Application.persistentDataPath, "gameData.json");
-
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-                Debug.Log("Saved game data deleted successfully.");
-            }
-            else
-            {
-                Debug.LogWarning("No saved game data found to delete.");
-            }
-        }
-
-        public void OnDeleteSaveDataButtonClick()
-        {
-            DeleteSavedGameData();
+            PlayerPrefs.DeleteKey(ScoreKey);
+            PlayerPrefs.DeleteKey(LivesKey);
         }
     }
 
-    [Serializable]
-    public class SaveGameData
-    {
-        public int score;
-        public int lives;
-
-        public SaveGameData(int score, int lives)
-        {
-            this.score = score;
-            this.lives = lives;
-        }
-    }
 }
