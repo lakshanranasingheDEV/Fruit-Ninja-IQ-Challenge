@@ -211,8 +211,9 @@ public class Game : MonoBehaviour
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using Yunash.Game;
 
 public class Game : MonoBehaviour
 {
@@ -416,6 +417,34 @@ public class Game : MonoBehaviour
     {
         gameOver = true;
         Debug.Log(playerWinner + " is the winner!");
+
+        // Ensure lives are restored after a win
+        if (NinjaManager.Instance != null)
+        {
+            NinjaManager.Instance.RestoreAllLives();
+        }
+        else
+        {
+            Debug.LogWarning("NinjaManager is not initialized!");
+        }
+
+        
+    }
+
+
+
+    public void PressedNinjaGame()
+    {
+        SceneManager.LoadScene("MainGameScene");
+        if (NinjaManager.Instance != null)
+        {
+            NinjaManager.Instance.RestoreAllLives();
+        }
+        else
+        {
+            Debug.LogWarning("NinjaManager is not initialized!");
+        }
+        //NinjaManager.Instance.RestoreAllLives();
     }
 
     private void ClearMovePlates()

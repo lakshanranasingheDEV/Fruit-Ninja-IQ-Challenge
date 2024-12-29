@@ -1,18 +1,144 @@
+using Yunash.Audio;
+using Yunash.Data;
+using Yunash.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class NinjaManager : MonoBehaviour
+namespace Yunash.Game
 {
-    // Start is called before the first frame update
-    void Start()
+    public class NinjaManager : MonoBehaviour
     {
-        
+    
+
+        public static NinjaManager Instance;
+
+        public Text scoreText;
+        public Image[] lifeIcons; 
+        public Sprite lostLifeSprite; 
+
+        private int score = 0;
+        private int lives = 3;  
+
+        private const string ScoreKey = "PlayerScore"; 
+        private const string LivesKey = "PlayerLives"; 
+
+        private void Awake()
+        {
+            if (Instance != null)
+            {
+                Destroy(Instance);
+                Instance = this;
+            }
+            else
+            {
+                Instance = this;
+            }
+
+        }
+
+        private void Start()
+        {
+            LoadGameProgress();
+            //ResetGameProgress();
+            //RestoreAllLives();
+            UpdateScoreUI();
+            UpdateLivesUI();
+        }
+
+        public void AddScore(int amount)
+        {
+            SaveGameProgress();
+            score += amount;
+            UpdateScoreUI();
+            
+        }
+
+        public void SubtractLife()
+        {
+            if (lives > 0)
+            {
+                lives--;
+                UpdateLivesUI();
+                SaveGameProgress(); 
+
+                if (lives <= 0)
+                {
+                    GameOver();
+                }
+            }
+        }
+
+        private void UpdateScoreUI()
+        {
+            scoreText.text = score.ToString();
+        }
+
+        private void UpdateLivesUI()
+        {
+            for (int i = 0; i < lifeIcons.Length; i++)
+            {
+                if (i < lives)
+                {
+                    lifeIcons[i].enabled = true;
+                }
+                else
+                {
+                    lifeIcons[i].sprite = lostLifeSprite; 
+                }
+            }
+        }
+
+        public void RestoreAllLives()
+        {
+            lives = lifeIcons.Length; 
+            UpdateLivesUI();
+            SaveGameProgress();
+        }
+
+        private void GameOver()
+        {
+            if (LoginCanvas.Instance != null && LoginCanvas.Instance.gameOverPanel != null)
+            {
+                LoginCanvas.Instance.gameOverPanel.SetActive(true); 
+            }
+            else
+            {
+                Debug.LogError("GameManager: GameOver: LoginCanvas or GameOverPanel is not set!");
+            }
+
+            Time.timeScale = 0f; 
+        }
+
+        public void RestartGame()
+        {
+            Time.timeScale = 1f; 
+            ResetGameProgress(); 
+            RestoreAllLives(); 
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainGameScene");
+        }
+
+        private void SaveGameProgress()
+        {
+            PlayerPrefs.SetInt(ScoreKey, score);
+            PlayerPrefs.SetInt(LivesKey, lives);
+            PlayerPrefs.Save();
+        }
+
+        private void LoadGameProgress()
+        {
+            lives = PlayerPrefs.GetInt(LivesKey, lifeIcons.Length); 
+            score = PlayerPrefs.GetInt(ScoreKey, 0); 
+        }
+
+        public void ResetGameProgress()
+        {
+            PlayerPrefs.DeleteKey(ScoreKey);
+            PlayerPrefs.DeleteKey(LivesKey);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

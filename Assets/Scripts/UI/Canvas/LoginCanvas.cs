@@ -11,17 +11,18 @@ namespace Yunash.UI
     {
         public static LoginCanvas Instance;
 
-        public GameObject gameOverPanel; // Reference to the Game Over UI
-        public GameObject loadingPanel; // Loading page panel
-        public GameObject menuPanel; // Menu panel
-        public GameObject gamePanel; // Game panel
-        public GameObject levelCompletePanel; // Level Complete panel
-        public Slider loadingSlider; // Slider for loading progress
-        //public Text currentLevelText; // Text to show the current level
+        public GameObject gameOverPanel; 
+        public GameObject loadingPanel; 
+        public GameObject menuPanel; 
+        public GameObject gamePanel; 
+        public GameObject levelCompletePanel; 
+        public Slider loadingSlider; 
+        //public Text currentLevelText;  
 
-        private int currentLevel; // Track the current level
+        private int currentLevel; 
 
-        private const string CurrentLevelKey = "CurrentLevel"; // Key for saving current level
+        private const string CurrentLevelKey = "CurrentLevel"; 
+        private const string IsFirstTimeKey = "IsFirstTime"; 
 
         private void Awake()
         {
@@ -42,15 +43,23 @@ namespace Yunash.UI
             gameOverPanel.SetActive(false);
             gamePanel.SetActive(false);
             levelCompletePanel.SetActive(false);
-
             menuPanel.SetActive(false);
-            StartCoroutine(LoadGame());
+
+            // Check if it's the first time launching the game
+            if (IsFirstTime())
+            {
+                StartCoroutine(LoadGame()); 
+            }
+            else
+            {
+                menuPanel.SetActive(true); 
+            }
         }
 
         public void OnStartButtonPressed()
         {
-            menuPanel.SetActive(false); // Hide menu panel
-            gamePanel.SetActive(true); // Show game panel
+            menuPanel.SetActive(false); 
+            gamePanel.SetActive(true); 
             UpdateLevelText();
         }
 
@@ -62,14 +71,14 @@ namespace Yunash.UI
 
         public void OnPressedChessPlayButton()
         {
-            // Load the Chess scene
+           
             SceneManager.LoadScene("Chess");
         }
 
         public void CompleteLevel()
         {
-            currentLevel++; // Increment level
-            SaveLevelProgress(); // Save the current level
+            currentLevel++; 
+            SaveLevelProgress(); 
             ShowLevelCompletePanel();
         }
 
@@ -81,16 +90,16 @@ namespace Yunash.UI
 
         private void LoadLevelProgress()
         {
-            // Load the saved level or default to level 1
+            
             currentLevel = PlayerPrefs.GetInt(CurrentLevelKey, 1);
         }
 
         private void UpdateLevelText()
         {
-           /* if (currentLevelText != null)
-            {
-                currentLevelText.text = "Level: " + currentLevel.ToString();
-            }*/
+            /* if (currentLevelText != null)
+             {
+                 currentLevelText.text = "Level: " + currentLevel.ToString();
+             }*/
         }
 
         private void ShowLevelCompletePanel()
@@ -99,7 +108,7 @@ namespace Yunash.UI
             {
                 levelCompletePanel.SetActive(true);
             }
-            Time.timeScale = 0f; // Pause the game
+            Time.timeScale = 0f; 
         }
 
         private IEnumerator LoadGame()
@@ -110,13 +119,27 @@ namespace Yunash.UI
             float progress = 0f;
             while (progress < 1f)
             {
-                progress += 0.1f; // Simulate loading progress
+                progress += 0.1f; 
                 loadingSlider.value = progress;
                 yield return new WaitForSeconds(0.1f);
             }
 
-            loadingPanel.SetActive(false); // Hide loading panel
-            menuPanel.SetActive(true); // Show menu panel
+            loadingPanel.SetActive(false); 
+            menuPanel.SetActive(true); 
+
+            SetFirstTimeFlag(false); 
+        }
+
+        private bool IsFirstTime()
+        {
+            
+            return PlayerPrefs.GetInt(IsFirstTimeKey, 1) == 1;
+        }
+
+        private void SetFirstTimeFlag(bool isFirstTime)
+        {
+            PlayerPrefs.SetInt(IsFirstTimeKey, isFirstTime ? 1 : 0);
+            PlayerPrefs.Save();
         }
     }
 }
