@@ -230,7 +230,7 @@ public class Game : MonoBehaviour
     // Game Ending
     private bool gameOver = false;
 
-
+    private int whiteMoveCount = 0;
 
     //UI Handling part
     public GameObject startBox; // Drag Start Box Panel here
@@ -412,14 +412,22 @@ public class Game : MonoBehaviour
             else
             {
                 Debug.LogWarning("Piece is null or has been destroyed.");
-                Winner("white");
                 blackPieces.RemoveAt(randIndex); // Remove destroyed piece from the list
+            }
+
+            // Check if black has no remaining pieces
+            if (!AreBlackPiecesRemaining())
+            {
+                Debug.Log("No black pieces remaining. Checking move count.");
+                Winner("white");
+                yield break; // Exit the coroutine early
             }
         }
 
         // Switch back to the player's turn
         NextTurn();
     }
+
 
 
     private List<Vector2> CollectValidMovesFromPlates()
@@ -486,13 +494,25 @@ public class Game : MonoBehaviour
                 Destroy(target);
                 SetPositionEmpty(x, y);
 
+                // Increment move counter for white attacking
+                whiteMoveCount++;
+                Debug.Log("White attacked black. Move count: " + whiteMoveCount);
+
                 // Check if all black pieces are eliminated
                 if (!AreBlackPiecesRemaining())
                 {
+                    Debug.Log("White eliminated black in " + whiteMoveCount + " moves!");
                     Winner("white");
                     return;
                 }
             }
+        }
+
+        // Increment move counter for a regular white move
+        if (cm.player == "white")
+        {
+            whiteMoveCount++;
+            Debug.Log("White moved. Move count: " + whiteMoveCount);
         }
 
         // Move the piece to the new position
@@ -502,6 +522,8 @@ public class Game : MonoBehaviour
         cm.SetCoords();
         SetPosition(piece);
     }
+
+
 
 
     public bool IsGameOver()
@@ -516,6 +538,7 @@ public class Game : MonoBehaviour
 
         if (playerWinner == "white")
         {
+            Debug.Log("White eliminated black in " + whiteMoveCount + " moves!");
             EndGame(); // Show end box
         }
     }
