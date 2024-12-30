@@ -230,6 +230,44 @@ public class Game : MonoBehaviour
     // Game Ending
     private bool gameOver = false;
 
+
+
+    //UI Handling part
+    public GameObject startBox; // Drag Start Box Panel here
+    public GameObject endBox;   // Drag End Box Panel here
+    public string nextSceneName; // Name of the next scene to load
+
+    private void Awake()
+    {
+        // Ensure only the start box is active at the beginning
+        startBox.SetActive(true);
+        endBox.SetActive(false);
+        Time.timeScale = 0f; // Pause the game initially
+    }
+
+    // Call this when "OK" button is pressed
+    public void StartGame()
+    {
+        startBox.SetActive(false);
+        Time.timeScale = 1f; // Resume the game
+    }
+
+    // Trigger the end game state
+    public void EndGame()
+    {
+        Time.timeScale = 0f; // Pause the game
+        endBox.SetActive(true);
+    }
+
+    // Call this when the "Next Scene" button is pressed
+    public void GoToNextScene()
+    {
+        Time.timeScale = 1f; // Ensure time scale is reset
+        SceneManager.LoadScene(nextSceneName);
+    }
+
+    //
+
     public void Start()
     {
         // Randomly select and place 3 white pieces
@@ -333,35 +371,56 @@ public class Game : MonoBehaviour
             int randIndex = Random.Range(0, blackPieces.Count);
             GameObject piece = blackPieces[randIndex];
 
-            // Call InitiateMovePlates() for the selected piece to determine valid moves
-            piece.GetComponent<Chessman>().InitiateMovePlates();
-
-            // Retrieve valid move positions from the move plates
-            List<Vector2> validMoves = CollectValidMovesFromPlates();
-
-            if (validMoves.Count > 0)
+            // Check if the piece is null (destroyed)
+            if (piece != null)
             {
-                // Pick a random valid move
-                int moveIndex = Random.Range(0, validMoves.Count);
-                Vector2 target = validMoves[moveIndex];
+                // Safe to access the piece
+                var chessman = piece.GetComponent<Chessman>();
+                if (chessman != null)
+                {
+                    // Call InitiateMovePlates() for the selected piece to determine valid moves
+                    chessman.InitiateMovePlates();
 
-                // Move the piece to the selected target
-                MovePiece(piece, (int)target.x, (int)target.y);
-                moveMade = true;
+                    // Retrieve valid move positions from the move plates
+                    List<Vector2> validMoves = CollectValidMovesFromPlates();
+
+                    if (validMoves.Count > 0)
+                    {
+                        // Pick a random valid move
+                        int moveIndex = Random.Range(0, validMoves.Count);
+                        Vector2 target = validMoves[moveIndex];
+
+                        // Move the piece to the selected target
+                        MovePiece(piece, (int)target.x, (int)target.y);
+                        moveMade = true;
+                    }
+                    else
+                    {
+                        // Remove the piece from the list if it has no valid moves
+                        blackPieces.RemoveAt(randIndex);
+                    }
+
+                    // Clear move plates to reset the board UI
+                    ClearMovePlates();
+                }
+                else
+                {
+                    Debug.LogError("Chessman component missing on the selected piece.");
+                    blackPieces.RemoveAt(randIndex); // Remove invalid piece to avoid infinite loop
+                }
             }
             else
             {
-                // Remove the piece from the list if it has no valid moves
-                blackPieces.RemoveAt(randIndex);
+                Debug.LogWarning("Piece is null or has been destroyed.");
+                Winner("white");
+                blackPieces.RemoveAt(randIndex); // Remove destroyed piece from the list
             }
-
-            // Clear move plates to reset the board UI
-            ClearMovePlates();
         }
 
         // Switch back to the player's turn
         NextTurn();
     }
+
 
     private List<Vector2> CollectValidMovesFromPlates()
     {
@@ -396,16 +455,54 @@ public class Game : MonoBehaviour
         return validMoves;
     }
 
+    // Add this method to check if any black pieces are left
+    private bool AreBlackPiecesRemaining()
+    {
+        foreach (var piece in playerBlack)
+        {
+            if (piece != null) // Check if the piece still exists
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Update the MovePiece method
     public void MovePiece(GameObject piece, int x, int y)
     {
         Chessman cm = piece.GetComponent<Chessman>();
 
+        // Check if the target position has an opponent piece
+        GameObject target = GetPosition(x, y);
+        if (target != null)
+        {
+            Chessman targetCm = target.GetComponent<Chessman>();
+
+            // If white attacks a black piece
+            if (cm.player == "white" && targetCm.player == "black")
+            {
+                // Remove the black piece
+                Destroy(target);
+                SetPositionEmpty(x, y);
+
+                // Check if all black pieces are eliminated
+                if (!AreBlackPiecesRemaining())
+                {
+                    Winner("white");
+                    return;
+                }
+            }
+        }
+
+        // Move the piece to the new position
         SetPositionEmpty(cm.GetXBoard(), cm.GetYBoard());
         cm.SetXBoard(x);
         cm.SetYBoard(y);
         cm.SetCoords();
         SetPosition(piece);
     }
+
 
     public bool IsGameOver()
     {
@@ -416,6 +513,11 @@ public class Game : MonoBehaviour
     {
         gameOver = true;
         Debug.Log(playerWinner + " is the winner!");
+
+        if (playerWinner == "white")
+        {
+            EndGame(); // Show end box
+        }
     }
 
     private void ClearMovePlates()
