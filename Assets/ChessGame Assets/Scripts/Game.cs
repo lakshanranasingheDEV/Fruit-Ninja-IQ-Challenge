@@ -231,17 +231,23 @@ public class Game : MonoBehaviour
     private bool gameOver = false;
 
     private int whiteMoveCount = 0;
+    private int totalWhiteMoves = 0;
+    private int blackMoveCount = 0;
+    private Dictionary<GameObject, int> blackPieceMoveCounts = new Dictionary<GameObject, int>();
+
 
     //UI Handling part
     public GameObject startBox; // Drag Start Box Panel here
     public GameObject endBox;   // Drag End Box Panel here
     public string nextSceneName; // Name of the next scene to load
+    public GameObject gameOverUI;
 
     private void Awake()
     {
         // Ensure only the start box is active at the beginning
         startBox.SetActive(true);
         endBox.SetActive(false);
+        gameOverUI.SetActive(false);
         Time.timeScale = 0f; // Pause the game initially
     }
 
@@ -363,7 +369,6 @@ public class Game : MonoBehaviour
         yield return new WaitForSeconds(1.0f); // Delay for AI thinking simulation
 
         List<GameObject> blackPieces = new List<GameObject>(playerBlack); // List of all black pieces
-
         bool moveMade = false;
 
         while (!moveMade && blackPieces.Count > 0)
@@ -371,61 +376,86 @@ public class Game : MonoBehaviour
             int randIndex = Random.Range(0, blackPieces.Count);
             GameObject piece = blackPieces[randIndex];
 
-            // Check if the piece is null (destroyed)
             if (piece != null)
             {
-                // Safe to access the piece
                 var chessman = piece.GetComponent<Chessman>();
                 if (chessman != null)
                 {
-                    // Call InitiateMovePlates() for the selected piece to determine valid moves
+                    Debug.Log($"AI handling move for {chessman.name}.");
                     chessman.InitiateMovePlates();
-
-                    // Retrieve valid move positions from the move plates
                     List<Vector2> validMoves = CollectValidMovesFromPlates();
+                    Debug.Log($"Valid moves for {chessman.name}: {validMoves.Count}");
 
                     if (validMoves.Count > 0)
                     {
-                        // Pick a random valid move
                         int moveIndex = Random.Range(0, validMoves.Count);
                         Vector2 target = validMoves[moveIndex];
 
-                        // Move the piece to the selected target
+                        Debug.Log($"{chessman.name} moving to {target}.");
                         MovePiece(piece, (int)target.x, (int)target.y);
                         moveMade = true;
+
+                        if (blackPieceMoveCounts.ContainsKey(piece))
+                        {
+                            blackPieceMoveCounts[piece]++;
+                        }
+                        else
+                        {
+                            blackPieceMoveCounts[piece] = 1;
+                        }
                     }
                     else
                     {
-                        // Remove the piece from the list if it has no valid moves
-                        blackPieces.RemoveAt(randIndex);
+                        Debug.LogWarning($"No valid moves for {chessman.name}. Removing piece.");
+
+                        LogAndRemovePiece(piece, blackPieces, randIndex);
                     }
 
-                    // Clear move plates to reset the board UI
                     ClearMovePlates();
                 }
                 else
                 {
                     Debug.LogError("Chessman component missing on the selected piece.");
-                    blackPieces.RemoveAt(randIndex); // Remove invalid piece to avoid infinite loop
+                    blackPieces.RemoveAt(randIndex);
                 }
             }
             else
             {
-                Debug.LogWarning("Piece is null or has been destroyed.");
-                blackPieces.RemoveAt(randIndex); // Remove destroyed piece from the list
+                LogAndRemovePiece(piece, blackPieces, randIndex);
             }
 
-            // Check if black has no remaining pieces
             if (!AreBlackPiecesRemaining())
             {
                 Debug.Log("No black pieces remaining. Checking move count.");
+                foreach (var entry in blackPieceMoveCounts)
+                {
+                    if (entry.Key != null)
+                    {
+                        Debug.Log($"Black piece {entry.Key.name} moved {entry.Value} times before elimination.");
+                    }
+                }
                 Winner("white");
-                yield break; // Exit the coroutine early
+                yield break;
             }
         }
 
-        // Switch back to the player's turn
         NextTurn();
+    }
+
+
+    private void LogAndRemovePiece(GameObject piece, List<GameObject> blackPieces, int index)
+    {
+        if (piece != null && blackPieceMoveCounts.ContainsKey(piece))
+        {
+            Debug.Log($"Black piece {piece.name} moved {blackPieceMoveCounts[piece]} times before being eliminated.");
+            blackPieceMoveCounts.Remove(piece);
+        }
+        else
+        {
+            Debug.LogWarning("Attempted to log a destroyed or null piece.");
+        }
+
+        blackPieces.RemoveAt(index);
     }
 
 
@@ -483,9 +513,17 @@ public class Game : MonoBehaviour
 
         // Check if the target position has an opponent piece
         GameObject target = GetPosition(x, y);
+
         if (target != null)
         {
             Chessman targetCm = target.GetComponent<Chessman>();
+
+            if (cm.player == "white")
+            {
+                totalWhiteMoves++;
+                Debug.Log("White moved. Total white moves: " + totalWhiteMoves);
+            }
+
 
             // If white attacks a black piece
             if (cm.player == "white" && targetCm.player == "black")
@@ -495,24 +533,27 @@ public class Game : MonoBehaviour
                 SetPositionEmpty(x, y);
 
                 // Increment move counter for white attacking
-                whiteMoveCount++;
-                Debug.Log("White attacked black. Move count: " + whiteMoveCount);
+                totalWhiteMoves++;
+
+                Debug.Log("White attacked black. Total moves: " + totalWhiteMoves);
 
                 // Check if all black pieces are eliminated
                 if (!AreBlackPiecesRemaining())
                 {
-                    Debug.Log("White eliminated black in " + whiteMoveCount + " moves!");
+                    Debug.Log("White eliminated black in " + totalWhiteMoves + " moves!");
                     Winner("white");
                     return;
                 }
             }
         }
-
-        // Increment move counter for a regular white move
-        if (cm.player == "white")
+        else
         {
-            whiteMoveCount++;
-            Debug.Log("White moved. Move count: " + whiteMoveCount);
+            // Increment move count for regular moves
+            if (cm.player == "white")
+            {
+                totalWhiteMoves++;
+                Debug.Log("White moved. Total moves: " + totalWhiteMoves);
+            }
         }
 
         // Move the piece to the new position
@@ -521,10 +562,30 @@ public class Game : MonoBehaviour
         cm.SetYBoard(y);
         cm.SetCoords();
         SetPosition(piece);
+
+        if (totalWhiteMoves >= 5)
+        {
+            TriggerGameOver();
+        }
+
+        // Switch turns
+        //NextTurn();
     }
 
 
+    private void TriggerGameOver()
+    {
+        Debug.Log("Game Over! Player failed to eliminate the black chess piece.");
+        Time.timeScale = 0f; // Pause the game
+        gameOverUI.SetActive(true); // Show the Game Over UI
+    }
 
+    // Add a method to reset the game
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload the current scene
+        Time.timeScale = 1f; // Resume the game
+    }
 
     public bool IsGameOver()
     {
@@ -538,6 +599,7 @@ public class Game : MonoBehaviour
 
         if (playerWinner == "white")
         {
+
             Debug.Log("White eliminated black in " + whiteMoveCount + " moves!");
             EndGame(); // Show end box
         }
