@@ -213,6 +213,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Yunash.Game;
 
 public class Game : MonoBehaviour
 {
@@ -269,7 +270,23 @@ public class Game : MonoBehaviour
     public void GoToNextScene()
     {
         Time.timeScale = 1f; // Ensure time scale is reset
-        SceneManager.LoadScene(nextSceneName);
+        SceneManager.LoadScene("MainGameScene");
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "MainGameScene" && NinjaManager.Instance != null)
+        {
+            NinjaManager.Instance.RestoreAllLives();
+            Debug.Log("Lives restored without affecting the score.");
+        }
+        else
+        {
+            Debug.LogWarning("NinjaManager is not initialized or scene mismatch!");
+        }
+
+        SceneManager.sceneLoaded -= OnSceneLoaded; // Unsubscribe after execution
     }
 
     //
