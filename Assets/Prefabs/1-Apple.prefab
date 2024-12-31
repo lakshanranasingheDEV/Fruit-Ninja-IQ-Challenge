@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fruitSlicingPrefab: {fileID: 362671414405760217, guid: ed98d4abf6fd1cc43aeaf55041643aa0, type: 3}
+  floatingTextPrefab: {fileID: 4609901650365795939, guid: 6ac8f96013de4f64cafb09a5932fa619, type: 3}
   startForce: 11.85
   harmful: 0
 --- !u!58 &-4486560027197527881

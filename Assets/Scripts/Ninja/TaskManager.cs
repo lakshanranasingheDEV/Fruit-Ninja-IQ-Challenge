@@ -54,10 +54,7 @@ public class TaskManager : MonoBehaviour
 
     private void Start()
     {
-        //PlayerPrefs.DeleteAll(); 
-        UpdateLevelText();
-        ActivateLevelGameObject(currentLevel);
-        SetRandomTask();
+        InitializeGame();
 
         if (nextButton != null)
         {
@@ -67,6 +64,14 @@ public class TaskManager : MonoBehaviour
         {
             Debug.LogWarning("Next Button is not assigned in the inspector.");
         }
+    }
+
+    private void InitializeGame()
+    {
+        DeactivateAllLevels();
+        ActivateLevelGameObject(currentLevel);
+        SetRandomTask();
+        UpdateLevelText();
     }
 
     public void SetRandomTask()
@@ -136,14 +141,29 @@ public class TaskManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        ActivateLevelGameObject(currentLevel, false);
-
-        currentLevel++;
         SaveGameProgress();
-        LoginCanvas.Instance.levelCompletePanel.SetActive(false);
+        ActivateLevelGameObject(currentLevel, false);
+        currentLevel++;
+
+        if (LoginCanvas.Instance != null && LoginCanvas.Instance.levelCompletePanel != null)
+        {
+            LoginCanvas.Instance.levelCompletePanel.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning("LoginCanvas or levelCompletePanel is not set!");
+        }
+
+        if (currentLevel > levels.Count)
+        {
+            Debug.Log("All levels completed!");
+           
+            return;
+        }
 
         ActivateLevelGameObject(currentLevel);
 
+        SaveGameProgress();
         UpdateLevelText();
         SetRandomTask();
     }
@@ -159,6 +179,17 @@ public class TaskManager : MonoBehaviour
         else
         {
             Debug.LogWarning($"No GameObject found for level {level}");
+        }
+    }
+
+    private void DeactivateAllLevels()
+    {
+        foreach (var level in levels)
+        {
+            if (level.levelGameObject != null)
+            {
+                level.levelGameObject.SetActive(false);
+            }
         }
     }
 

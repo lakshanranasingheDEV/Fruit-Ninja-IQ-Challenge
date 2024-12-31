@@ -16,11 +16,14 @@ namespace Yunash.Game
 
         public static NinjaManager Instance;
 
-        public Text scoreText;
+       // public Text scoreText;
         public Image[] lifeIcons; 
-        public Sprite lostLifeSprite; 
+        public Sprite lostLifeSprite;
 
+        [Header("Score Settings")]
+        [SerializeField] private List<Text> scoreTexts; // List of all score UI elements
         private int score = 0;
+        
         private int lives = 3;  
 
         private const string ScoreKey = "PlayerScore"; 
@@ -74,7 +77,15 @@ namespace Yunash.Game
 
         private void UpdateScoreUI()
         {
-            scoreText.text = score.ToString();
+            foreach (Text scoreText in scoreTexts)
+            {
+                if (scoreText != null)
+                {
+                    scoreText.text = score.ToString();
+                }
+            }
+
+            // scoreText.text = score.ToString();
         }
 
         private void UpdateLivesUI()
@@ -94,10 +105,22 @@ namespace Yunash.Game
 
         public void RestoreAllLives()
         {
-            lives = lifeIcons.Length; 
-            UpdateLivesUI();
-            SaveGameProgress();
+            lives = lifeIcons.Length; // Reset lives to the maximum
+            UpdateLivesUI();          // Update the UI to reflect the new lives count
+            SaveGameProgress(false);
         }
+
+        public void SaveGameProgress(bool saveScore = true)
+        {
+            PlayerPrefs.SetInt(LivesKey, lives);
+            if (saveScore)
+            {
+                PlayerPrefs.SetInt(ScoreKey, score);
+            }
+            PlayerPrefs.Save();
+            Debug.Log($"Game progress saved: Lives = {lives}, Score = {score} (Score saved: {saveScore})");
+        }
+
 
         private void GameOver()
         {
@@ -130,9 +153,12 @@ namespace Yunash.Game
 
         private void LoadGameProgress()
         {
-            lives = PlayerPrefs.GetInt(LivesKey, lifeIcons.Length); 
-            score = PlayerPrefs.GetInt(ScoreKey, 0); 
+            lives = PlayerPrefs.GetInt(LivesKey, lifeIcons.Length);
+            Debug.Log($"Loaded lives: {lives}");
+            score = PlayerPrefs.GetInt(ScoreKey, 0);
+            Debug.Log($"Loaded score: {score}");
         }
+
 
         public void ResetGameProgress()
         {

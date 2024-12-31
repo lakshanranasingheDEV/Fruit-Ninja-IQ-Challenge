@@ -436,16 +436,25 @@ public class Game : MonoBehaviour
     public void PressedNinjaGame()
     {
         SceneManager.LoadScene("MainGameScene");
-        if (NinjaManager.Instance != null)
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "MainGameScene" && NinjaManager.Instance != null)
         {
             NinjaManager.Instance.RestoreAllLives();
+            Debug.Log("Lives restored without affecting the score.");
         }
         else
         {
-            Debug.LogWarning("NinjaManager is not initialized!");
+            Debug.LogWarning("NinjaManager is not initialized or scene mismatch!");
         }
-        //NinjaManager.Instance.RestoreAllLives();
+
+        SceneManager.sceneLoaded -= OnSceneLoaded; // Unsubscribe after execution
     }
+
+
 
     private void ClearMovePlates()
     {
