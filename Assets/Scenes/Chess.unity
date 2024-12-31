@@ -2305,7 +2305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasBases:
-  - {fileID: 1405583698}
+  - {fileID: 0}
 --- !u!1001 &1151779679
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2648,7 +2648,6 @@ GameObject:
   - component: {fileID: 1405583701}
   - component: {fileID: 1405583700}
   - component: {fileID: 1405583699}
-  - component: {fileID: 1405583698}
   m_Layer: 0
   m_Name: LoginCanvas
   m_TagString: Untagged
@@ -2680,24 +2679,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1405583698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1405583696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d63295e42e1e94459d6ca253fb0727f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameOverPanel: {fileID: 0}
-  loadingPanel: {fileID: 0}
-  menuPanel: {fileID: 0}
-  gamePanel: {fileID: 0}
-  levelCompletePanel: {fileID: 0}
-  loadingSlider: {fileID: 0}
 --- !u!114 &1405583699
 MonoBehaviour:
   m_ObjectHideFlags: 0

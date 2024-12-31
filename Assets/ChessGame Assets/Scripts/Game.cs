@@ -528,19 +528,24 @@ public class Game : MonoBehaviour
     {
         Chessman cm = piece.GetComponent<Chessman>();
 
+        // Ensure the piece is a white piece before incrementing the move counter
+        if (cm.player == "white")
+        {
+            // Increment total white moves each time a white piece moves
+            totalWhiteMoves++;
+            Debug.Log($"White moved. Total white moves: {totalWhiteMoves}");
+        }
+
+        // Log the start of the move to check if the function is triggered
+        Debug.Log($"MovePiece called for {cm.name}. Current position: ({cm.GetXBoard()}, {cm.GetYBoard()})");
+
         // Check if the target position has an opponent piece
         GameObject target = GetPosition(x, y);
 
+        // If there is an opponent piece, handle attack logic
         if (target != null)
         {
             Chessman targetCm = target.GetComponent<Chessman>();
-
-            if (cm.player == "white")
-            {
-                totalWhiteMoves++;
-                Debug.Log("White moved. Total white moves: " + totalWhiteMoves);
-            }
-
 
             // If white attacks a black piece
             if (cm.player == "white" && targetCm.player == "black")
@@ -549,15 +554,13 @@ public class Game : MonoBehaviour
                 Destroy(target);
                 SetPositionEmpty(x, y);
 
-                // Increment move counter for white attacking
-                totalWhiteMoves++;
-
-                Debug.Log("White attacked black. Total moves: " + totalWhiteMoves);
+                // Log the attack and move count
+                Debug.Log($"White attacked black. Total white moves: {totalWhiteMoves}");
 
                 // Check if all black pieces are eliminated
                 if (!AreBlackPiecesRemaining())
                 {
-                    Debug.Log("White eliminated black in " + totalWhiteMoves + " moves!");
+                    Debug.Log($"White eliminated black in {totalWhiteMoves} moves!");
                     Winner("white");
                     return;
                 }
@@ -565,12 +568,8 @@ public class Game : MonoBehaviour
         }
         else
         {
-            // Increment move count for regular moves
-            if (cm.player == "white")
-            {
-                totalWhiteMoves++;
-                Debug.Log("White moved. Total moves: " + totalWhiteMoves);
-            }
+            // Log for regular move
+            Debug.Log($"White moved to an empty position: ({x}, {y}). Total white moves: {totalWhiteMoves}");
         }
 
         // Move the piece to the new position
@@ -580,14 +579,20 @@ public class Game : MonoBehaviour
         cm.SetCoords();
         SetPosition(piece);
 
+        // Debugging the move after the piece has been moved
+        Debug.Log($"Piece moved to new position: ({x}, {y}). Total white moves: {totalWhiteMoves}");
+
+        // Check if the game should end based on total white moves
         if (totalWhiteMoves >= 5)
         {
             TriggerGameOver();
         }
 
-        // Switch turns
-        //NextTurn();
+        // Switch turns (optional, depending on game logic)
+        // NextTurn();
     }
+
+
 
 
     private void TriggerGameOver()
