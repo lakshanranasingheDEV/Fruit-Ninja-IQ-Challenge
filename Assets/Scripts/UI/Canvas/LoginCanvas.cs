@@ -16,7 +16,9 @@ namespace Yunash.UI
         public GameObject menuPanel; 
         public GameObject gamePanel; 
         public GameObject levelCompletePanel; 
+        public GameObject NoLivesPanel; 
         public Slider loadingSlider; 
+
         //public Text currentLevelText;  
 
         private int currentLevel; 
@@ -43,6 +45,7 @@ namespace Yunash.UI
             gameOverPanel.SetActive(false);
             gamePanel.SetActive(false);
             levelCompletePanel.SetActive(false);
+            NoLivesPanel.SetActive(false);
             menuPanel.SetActive(false);
 
             // Check if it's the first time launching the game
