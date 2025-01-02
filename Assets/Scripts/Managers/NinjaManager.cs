@@ -12,22 +12,22 @@ namespace Yunash.Game
 {
     public class NinjaManager : MonoBehaviour
     {
-    
+
 
         public static NinjaManager Instance;
 
-       // public Text scoreText;
-        public Image[] lifeIcons; 
+        // public Text scoreText;
+        public Image[] lifeIcons;
         public Sprite lostLifeSprite;
 
         [Header("Score Settings")]
         [SerializeField] private List<Text> scoreTexts; // List of all score UI elements
         private int score = 0;
-        
-        private int lives = 3;  
 
-        private const string ScoreKey = "PlayerScore"; 
-        private const string LivesKey = "PlayerLives"; 
+        private int lives = 3;
+
+        private const string ScoreKey = "PlayerScore";
+        private const string LivesKey = "PlayerLives";
 
         private void Awake()
         {
@@ -48,8 +48,16 @@ namespace Yunash.Game
             LoadGameProgress();
             //ResetGameProgress();
             //RestoreAllLives();
+            if (lives <= 0)
+            {
+                ShowNoLevelPanel();
+
+            }
+
             UpdateScoreUI();
             UpdateLivesUI();
+
+
         }
 
         public void AddScore(int amount)
@@ -57,7 +65,7 @@ namespace Yunash.Game
             SaveGameProgress();
             score += amount;
             UpdateScoreUI();
-            
+
         }
 
         public void SubtractLife()
@@ -66,7 +74,7 @@ namespace Yunash.Game
             {
                 lives--;
                 UpdateLivesUI();
-                SaveGameProgress(); 
+                SaveGameProgress();
 
                 if (lives <= 0)
                 {
@@ -98,7 +106,7 @@ namespace Yunash.Game
                 }
                 else
                 {
-                    lifeIcons[i].sprite = lostLifeSprite; 
+                    lifeIcons[i].sprite = lostLifeSprite;
                 }
             }
         }
@@ -126,21 +134,21 @@ namespace Yunash.Game
         {
             if (LoginCanvas.Instance != null && LoginCanvas.Instance.gameOverPanel != null)
             {
-                LoginCanvas.Instance.gameOverPanel.SetActive(true); 
+                LoginCanvas.Instance.gameOverPanel.SetActive(true);
             }
             else
             {
                 Debug.LogError("GameManager: GameOver: LoginCanvas or GameOverPanel is not set!");
             }
 
-            Time.timeScale = 0f; 
+            Time.timeScale = 0f;
         }
 
         public void RestartGame()
         {
-            Time.timeScale = 1f; 
-            ResetGameProgress(); 
-            RestoreAllLives(); 
+            Time.timeScale = 1f;
+            ResetGameProgress();
+            RestoreAllLives();
             UnityEngine.SceneManagement.SceneManager.LoadScene("MainGameScene");
         }
 
@@ -165,6 +173,21 @@ namespace Yunash.Game
             PlayerPrefs.DeleteKey(ScoreKey);
             PlayerPrefs.DeleteKey(LivesKey);
         }
+
+        public void ShowNoLevelPanel()
+        {
+            if (LoginCanvas.Instance != null && LoginCanvas.Instance.NoLivesPanel != null)
+            {
+                LoginCanvas.Instance.NoLivesPanel.SetActive(true);
+            }
+            else
+            {
+                Debug.LogError("GameManager: NoLivesPanel: LoginCanvas or NoLivesPanel is not set!");
+            }
+
+        }
     }
+
+
 
 }
