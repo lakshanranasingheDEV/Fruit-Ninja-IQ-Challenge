@@ -1,41 +1,3 @@
-/*using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-
-public class Fruit : MonoBehaviour
-{
-
-    public GameObject _fruitSlicingPrefab;
-    public float startForce = 15f;
-
-    Rigidbody2D rb;
-
-
-    private void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        rb.AddForce(transform.up * startForce, ForceMode2D.Impulse);
-    }
-
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.tag == "Blade")
-        {
-
-            Vector3 direction = (col.transform.position - transform.position).normalized;
-
-            Quaternion rotation = Quaternion.LookRotation(direction);
-
-            GameObject slicedFruit = Instantiate(_fruitSlicingPrefab, transform.position, rotation);
-            Destroy(slicedFruit, 3f);
-            Destroy(gameObject);
-            
-        }       
-    }
-}
-*/
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,6 +29,17 @@ public class Fruit : MonoBehaviour
 
             GameObject slicedFruit = Instantiate(fruitSlicingPrefab, transform.position, rotation);
 
+            // Set the parent of the sliced fruit to the "Slices" object
+            GameObject slicesParent = GameObject.Find("Slices");
+            if (slicesParent != null)
+            {
+                slicedFruit.transform.SetParent(slicesParent.transform);
+            }
+            else
+            {
+                Debug.LogWarning("Slices parent object not found in the hierarchy!");
+            }
+
             Rigidbody2D[] slicedParts = slicedFruit.GetComponentsInChildren<Rigidbody2D>();
             foreach (Rigidbody2D part in slicedParts)
             {
@@ -84,23 +57,23 @@ public class Fruit : MonoBehaviour
                     textMesh.text = harmful ? "-1" : "+1";
                     Destroy(floatingText, 2f);
                 }
-
-                TaskManager.Instance.DecrementTaskCount(gameObject);
-
-                Destroy(slicedFruit, 3f);
-                Destroy(gameObject);
-
-                // Update score
-                if (harmful)
-                {
-                    NinjaManager.Instance.SubtractLife();
-                }
-                else
-                {
-                    NinjaManager.Instance.AddScore(1); // Add points for normal fruits
-                }
             }
+
+            Destroy(slicedFruit, 3f);
+            Destroy(gameObject);
+
+            // Update score
+            if (harmful)
+            {
+                NinjaManager.Instance.SubtractLife();
+            }
+            else
+            {
+                NinjaManager.Instance.AddScore(1); // Add points for normal fruits
+            }
+
+            // Notify TaskManager
+            TaskManager.Instance.DecrementTaskCount(gameObject);
         }
     }
 }
-
