@@ -10,18 +10,22 @@ public class Game : MonoBehaviour
     
     public GameObject chesspiece;
 
+    public Slider moveSlider; // Reference to the slider
+    public Text moveText;     // Reference to the text below the slider
+
+
     private GameObject[,] positions = new GameObject[8, 8];
     private GameObject[] playerBlack = new GameObject[16];
     private GameObject[] playerWhite = new GameObject[16];
 
     private string currentPlayer = "white";
 
-    
     private bool gameOver = false;
 
     private int whiteMoveCount = 0;
     private int totalWhiteMoves = 0;
     private int blackMoveCount = 0;
+    private int maxMoves = 5;
 
     private Dictionary<GameObject, int> whitePieceMoveCounts = new Dictionary<GameObject, int>();
     private Dictionary<GameObject, int> blackPieceMoveCounts = new Dictionary<GameObject, int>();
@@ -33,6 +37,7 @@ public class Game : MonoBehaviour
     public GameObject endBox;   
     public string nextSceneName; 
     public GameObject gameOverUI;
+    public GameObject settingsPanel;
 
     private void Awake()
     {
@@ -40,6 +45,7 @@ public class Game : MonoBehaviour
         startBox.SetActive(true);
         endBox.SetActive(false);
         gameOverUI.SetActive(false);
+        settingsPanel.SetActive(false);
         Time.timeScale = 0f; 
     }
 
@@ -57,6 +63,18 @@ public class Game : MonoBehaviour
         endBox.SetActive(true);
     }
 
+    public void ToggleSettingsPanel()
+    {
+        if (settingsPanel != null)
+        {
+            bool isActive = settingsPanel.activeSelf;
+            settingsPanel.SetActive(!isActive); // Toggle the panel visibility
+        }
+        else
+        {
+            Debug.LogWarning("Settings panel is not assigned in the inspector!");
+        }
+    }
     public void GoToNextScene()
     {
         Time.timeScale = 1f; 
@@ -95,6 +113,9 @@ public class Game : MonoBehaviour
             whitePieceMoveCounts[piece] = 0; // Initialize movement counts for white pieces
         }
 
+        moveSlider.maxValue = 5; // Set the slider max value
+        moveSlider.value = 0; // Initialize slider value
+        //UpdateMoveUI();
     }
 
     void InitializePiece()
@@ -349,6 +370,8 @@ public class Game : MonoBehaviour
         {
             Debug.Log($"Before increment: totalWhiteMoves = {totalWhiteMoves}");
             totalWhiteMoves++;
+            moveSlider.value = totalWhiteMoves;
+            UpdateMoveUI();
             Debug.Log($"After increment: totalWhiteMoves = {totalWhiteMoves}");
         }
 
@@ -381,7 +404,20 @@ public class Game : MonoBehaviour
         }
     }
 
+    public void UpdateMoveUI()
+    {
+        if (moveSlider != null)
+        {
+            moveSlider.value = totalWhiteMoves;
+        }
 
+        if (moveText != null)
+        {
+            moveText.text = $"Moves: {totalWhiteMoves}/{(int)moveSlider.maxValue}";
+        }
+
+        Debug.Log($"Slider updated: {moveSlider.value}, Text updated: {moveText.text}");
+    }
 
     public void LogWhiteMoves()
     {
