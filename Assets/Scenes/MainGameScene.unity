@@ -1027,6 +1027,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1660378313}
     m_Modifications:
+    - target: {fileID: 4715176675184656797, guid: 1f43c02e85378224a8b03d5f36760976, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0048828125
+      objectReference: {fileID: 0}
     - target: {fileID: 4715176675398437599, guid: 1f43c02e85378224a8b03d5f36760976, type: 3}
       propertyPath: m_Camera
       value: 
@@ -1078,6 +1082,10 @@ PrefabInstance:
     - target: {fileID: 4715176675689569273, guid: 1f43c02e85378224a8b03d5f36760976, type: 3}
       propertyPath: m_Name
       value: --- GAME ---
+      objectReference: {fileID: 0}
+    - target: {fileID: 4715176675689569273, guid: 1f43c02e85378224a8b03d5f36760976, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f43c02e85378224a8b03d5f36760976, type: 3}
@@ -1284,6 +1292,10 @@ PrefabInstance:
     - target: {fileID: 3145302519871295955, guid: c5728c52b4ed269458bf245ec82c9a59, type: 3}
       propertyPath: m_Name
       value: '--- No Lives --- '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3145302519871295955, guid: c5728c52b4ed269458bf245ec82c9a59, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3145302520585757218, guid: c5728c52b4ed269458bf245ec82c9a59, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
