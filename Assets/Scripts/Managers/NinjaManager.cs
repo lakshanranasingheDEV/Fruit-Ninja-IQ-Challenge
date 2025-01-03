@@ -47,7 +47,7 @@ namespace Yunash.Game
         {
             LoadGameProgress();
             //ResetGameProgress();
-            RestoreAllLives();
+            //RestoreAllLives();
             if (lives <= 0)
             {
                 ShowNoLevelPanel();

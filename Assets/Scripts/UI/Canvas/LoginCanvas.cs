@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,20 +10,18 @@ namespace Yunash.UI
     {
         public static LoginCanvas Instance;
 
-        public GameObject gameOverPanel; 
-        public GameObject loadingPanel; 
-        public GameObject menuPanel; 
-        public GameObject gamePanel; 
-        public GameObject levelCompletePanel; 
-        public GameObject NoLivesPanel; 
-        public Slider loadingSlider; 
+        public GameObject gameOverPanel;
+        public GameObject loadingPanel;
+        public GameObject menuPanel;
+        public GameObject gamePanel;
+        public GameObject levelCompletePanel;
+        public GameObject NoLivesPanel;
+        public Slider loadingSlider;
 
-        //public Text currentLevelText;  
+        private int currentLevel;
 
-        private int currentLevel; 
-
-        private const string CurrentLevelKey = "CurrentLevel"; 
-        private const string IsFirstTimeKey = "IsFirstTime"; 
+        private const string CurrentLevelKey = "CurrentLevel";
+        private const string IsFirstTimeKey = "IsFirstTime";
 
         private void Awake()
         {
@@ -51,19 +48,32 @@ namespace Yunash.UI
             // Check if it's the first time launching the game
             if (IsFirstTime())
             {
-                StartCoroutine(LoadGame()); 
+                StartCoroutine(LoadGame());
             }
             else
             {
-                menuPanel.SetActive(true); 
+                menuPanel.SetActive(true);
             }
         }
 
         public void OnStartButtonPressed()
         {
-            menuPanel.SetActive(false); 
-            gamePanel.SetActive(true); 
-            UpdateLevelText();
+            int lives = PlayerPrefs.GetInt("PlayerLives", 3);
+
+            // Show NoLivesPanel if lives are 0
+            if (lives == 0)
+            {
+                gamePanel.SetActive(false);
+                ShowNoLivesPanel();
+            }
+
+            // Proceed to game panel if lives are 0 to 3
+            if (lives <= 3)
+            {
+                menuPanel.SetActive(false);
+                gamePanel.SetActive(true);
+                UpdateLevelText();
+            }
         }
 
         public void OnPressedHomeButton()
@@ -74,14 +84,13 @@ namespace Yunash.UI
 
         public void OnPressedChessPlayButton()
         {
-           
             SceneManager.LoadScene("Chess");
         }
 
         public void CompleteLevel()
         {
-            currentLevel++; 
-            SaveLevelProgress(); 
+            currentLevel++;
+            SaveLevelProgress();
             ShowLevelCompletePanel();
         }
 
@@ -93,16 +102,12 @@ namespace Yunash.UI
 
         private void LoadLevelProgress()
         {
-            
             currentLevel = PlayerPrefs.GetInt(CurrentLevelKey, 1);
         }
 
         private void UpdateLevelText()
         {
-            /* if (currentLevelText != null)
-             {
-                 currentLevelText.text = "Level: " + currentLevel.ToString();
-             }*/
+            // Update level text if needed
         }
 
         private void ShowLevelCompletePanel()
@@ -111,7 +116,7 @@ namespace Yunash.UI
             {
                 levelCompletePanel.SetActive(true);
             }
-            Time.timeScale = 0f; 
+            Time.timeScale = 0f;
         }
 
         private IEnumerator LoadGame()
@@ -122,20 +127,19 @@ namespace Yunash.UI
             float progress = 0f;
             while (progress < 1f)
             {
-                progress += 0.1f; 
+                progress += 0.1f;
                 loadingSlider.value = progress;
                 yield return new WaitForSeconds(0.1f);
             }
 
-            loadingPanel.SetActive(false); 
-            menuPanel.SetActive(true); 
+            loadingPanel.SetActive(false);
+            menuPanel.SetActive(true);
 
-            SetFirstTimeFlag(false); 
+            SetFirstTimeFlag(false);
         }
 
         private bool IsFirstTime()
         {
-            
             return PlayerPrefs.GetInt(IsFirstTimeKey, 1) == 1;
         }
 
@@ -143,6 +147,18 @@ namespace Yunash.UI
         {
             PlayerPrefs.SetInt(IsFirstTimeKey, isFirstTime ? 1 : 0);
             PlayerPrefs.Save();
+        }
+
+        private void ShowNoLivesPanel()
+        {
+            if (NoLivesPanel != null)
+            {
+                NoLivesPanel.SetActive(true);
+            }
+            else
+            {
+                Debug.LogError("NoLivesPanel is not assigned in the LoginCanvas!");
+            }
         }
     }
 }
