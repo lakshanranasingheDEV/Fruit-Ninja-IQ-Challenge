@@ -153,12 +153,25 @@ namespace Yunash.UI
         {
             if (NoLivesPanel != null)
             {
+                Debug.Log("Activating NoLivesPanel and deactivating gamePanel.");
+                //StartCoroutine(DeactivateGamePanelWithDelay());
+                
+                gamePanel.SetActive(false);
                 NoLivesPanel.SetActive(true);
             }
             else
             {
                 Debug.LogError("NoLivesPanel is not assigned in the LoginCanvas!");
             }
+            Time.timeScale = 0f;
         }
+
+        private IEnumerator DeactivateGamePanelWithDelay()
+        {
+            yield return null; // Wait for one frame
+            
+            Debug.Log("GamePanel deactivated after delay.");
+        }
+
     }
 }
