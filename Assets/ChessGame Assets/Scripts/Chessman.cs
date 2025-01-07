@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Chessman : MonoBehaviour
 {
+    public GameObject board;
+
     //References to objects in our Unity Scene
     public GameObject controller;
     public GameObject movePlate;
@@ -24,11 +26,22 @@ public class Chessman : MonoBehaviour
 
     public void Activate()
     {
+        board = GameObject.Find("Board"); // Ensure the board GameObject is named "Board" in the hierarchy
+
         //Get the game controller
         controller = GameObject.FindGameObjectWithTag("GameController");
 
         //Take the instantiated location and adjust transform
         SetCoords();
+
+        if (board != null)
+        {
+            this.transform.SetParent(board.transform);
+        }
+        else
+        {
+            Debug.LogWarning("Board GameObject not found! Make sure it is named 'Board' in the hierarchy.");
+        }
 
         //Choose correct sprite based on piece's name
         switch (this.name)
@@ -255,9 +268,13 @@ public class Chessman : MonoBehaviour
         //Set actual unity values
         GameObject mp = Instantiate(movePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
 
+        // Set the move plate's parent to the board
+        mp.transform.SetParent(board.transform);
+
         MovePlate mpScript = mp.GetComponent<MovePlate>();
         mpScript.SetReference(gameObject);
         mpScript.SetCoords(matrixX, matrixY);
+
     }
 
     public void MovePlateAttackSpawn(int matrixX, int matrixY)
