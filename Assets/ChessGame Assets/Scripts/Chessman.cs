@@ -55,15 +55,15 @@ public class Chessman : MonoBehaviour
         float y = yBoard;
 
         //Adjust by variable offset
-        x *= 0.60f;
-        y *= 0.60f;
+        x *= 0.66f;
+        y *= 0.66f;
 
         //Add constants (pos 0,0)
-        x += -2.0f;
-        y += -2.0f;
+        x += -2.3f;
+        y += -2.3f;
 
         //Set actual unity values
-        this.transform.position = new Vector3(x, y, -0.12f);
+        this.transform.position = new Vector3(x, y, -1.0f);
     }
 
     public int GetXBoard()
