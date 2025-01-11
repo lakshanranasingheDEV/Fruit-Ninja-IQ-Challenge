@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Yunash.UI;
-using Yunash.Audio;
-
 
 public class TaskManager : MonoBehaviour
 {
     public static TaskManager Instance;
-    private AudioManager audioManager;
-
 
     public Text taskText;
     public Image taskFruitImage;
@@ -132,8 +128,6 @@ public class TaskManager : MonoBehaviour
         if (LoginCanvas.Instance != null && LoginCanvas.Instance.levelCompletePanel != null)
         {
             LoginCanvas.Instance.levelCompletePanel.SetActive(true);
-            audioManager?.StopAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
-
         }
         else
         {
