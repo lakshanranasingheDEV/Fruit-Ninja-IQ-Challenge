@@ -22,6 +22,7 @@ namespace Yunash.Audio
         private void Start()
         {
             audioData = GameManager.Instance.DataService.AudioData;
+
         }
         public void MuteMusic(bool isMute)
         {
@@ -54,11 +55,21 @@ namespace Yunash.Audio
 
         public void StopAudio(AudioType audioType)
         {
+            // Stop the appropriate audio based on type
+            if (audioType == AudioType.ButtonClick)
+            {
+                soundsAudioSource.Stop(); // Stop all sound effects
+            }
+            else if (audioType == AudioType.IdleBackgroundMusic || audioType == AudioType.InGameBackgroundMusic || audioType == AudioType.LevelComplete)
+            {
+                musicAudioSource.Stop(); // Stop background music
+            }
         }
     }
 
     public enum AudioType
     {
+
         IdleBackgroundMusic,
         InGameBackgroundMusic,
         EnterGame,
