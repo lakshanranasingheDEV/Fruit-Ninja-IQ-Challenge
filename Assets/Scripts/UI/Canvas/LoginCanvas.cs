@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Yunash.Game;
+using Yunash.Audio;
 
 namespace Yunash.UI
 {
@@ -23,6 +24,8 @@ namespace Yunash.UI
         private const string CurrentLevelKey = "CurrentLevel";
         private const string IsFirstTimeKey = "IsFirstTime";
 
+        private AudioManager audioManager;
+
         private void Awake()
         {
             if (Instance == null)
@@ -37,6 +40,8 @@ namespace Yunash.UI
 
         private void Start()
         {
+            audioManager = FindObjectOfType<AudioManager>();
+
             LoadLevelProgress();
 
             gameOverPanel.SetActive(false);
@@ -53,6 +58,8 @@ namespace Yunash.UI
             else
             {
                 menuPanel.SetActive(true);
+                audioManager?.PlayAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
+
             }
         }
 
@@ -70,6 +77,7 @@ namespace Yunash.UI
             // Proceed to game panel if lives are 0 to 3
             if (lives <= 3)
             {
+                audioManager?.StopAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
                 menuPanel.SetActive(false);
                 gamePanel.SetActive(true);
                 UpdateLevelText();
@@ -92,6 +100,7 @@ namespace Yunash.UI
             currentLevel++;
             SaveLevelProgress();
             ShowLevelCompletePanel();
+            audioManager?.PlayAudio(Yunash.Audio.AudioType.LevelComplete);
         }
 
         private void SaveLevelProgress()
@@ -158,6 +167,7 @@ namespace Yunash.UI
                 
                 gamePanel.SetActive(false);
                 NoLivesPanel.SetActive(true);
+                audioManager?.PlayAudio(Yunash.Audio.AudioType.Error);
             }
             else
             {
