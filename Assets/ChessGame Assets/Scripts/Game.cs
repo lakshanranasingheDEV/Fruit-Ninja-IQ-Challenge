@@ -1071,4 +1071,80 @@ public class Game : MonoBehaviour
         }
     }
 
+    public bool CanCastle(int kingX, int kingY, string side, string player)
+    {
+        if (side == "kingside")
+        {
+            int rookX = kingX + 3; // Adjust based on board setup
+            Chessman rook = GetPosition(rookX, kingY)?.GetComponent<Chessman>();
+
+            if (rook != null && rook.name.Contains("rook") && !rook.GetHasMoved())
+            {
+                // Ensure squares between king and rook are empty
+                for (int x = kingX + 1; x < rookX; x++)
+                {
+                    if (GetPosition(x, kingY) != null) return false;
+                }
+                // Ensure the king is not in check and won't move through a check
+                if (!IsUnderAttack(kingX, kingY, player) &&
+                    !IsUnderAttack(kingX + 1, kingY, player) &&
+                    !IsUnderAttack(kingX + 2, kingY, player))
+                {
+                    return true;
+                }
+            }
+        }
+        else if (side == "queenside")
+        {
+            int rookX = kingX - 4; // Adjust based on board setup
+            Chessman rook = GetPosition(rookX, kingY)?.GetComponent<Chessman>();
+
+            if (rook != null && rook.name.Contains("rook") && !rook.GetHasMoved())
+            {
+                // Ensure squares between king and rook are empty
+                for (int x = kingX - 1; x > rookX; x--)
+                {
+                    if (GetPosition(x, kingY) != null) return false;
+                }
+                // Ensure the king is not in check and won't move through a check
+                if (!IsUnderAttack(kingX, kingY, player) &&
+                    !IsUnderAttack(kingX - 1, kingY, player) &&
+                    !IsUnderAttack(kingX - 2, kingY, player))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool IsUnderAttack(int x, int y, string color)
+    {
+        GameObject[] opponentPieces = color == "white" ? playerBlack : playerWhite;
+
+        foreach (GameObject piece in opponentPieces)
+        {
+            if (piece != null)
+            {
+                Chessman chessman = piece.GetComponent<Chessman>();
+                if (chessman != null)
+                {
+                    chessman.InitiateMovePlates();
+                    foreach (GameObject movePlate in GameObject.FindGameObjectsWithTag("MovePlate"))
+                    {
+                        MovePlate mpScript = movePlate.GetComponent<MovePlate>();
+                        if (mpScript.GetX() == x && mpScript.GetY() == y)
+                        {
+                            ClearMovePlates();
+                            return true;
+                        }
+                    }
+                    ClearMovePlates();
+                }
+            }
+        }
+        return false;
+    }
+
+
 }
