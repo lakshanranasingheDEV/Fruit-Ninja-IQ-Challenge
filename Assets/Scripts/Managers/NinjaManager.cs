@@ -15,6 +15,8 @@ namespace Yunash.Game
 
 
         public static NinjaManager Instance;
+        private AudioManager audioManager;
+
 
         // public Text scoreText;
         public Image[] lifeIcons;
@@ -135,6 +137,8 @@ namespace Yunash.Game
             if (LoginCanvas.Instance != null && LoginCanvas.Instance.gameOverPanel != null)
             {
                 LoginCanvas.Instance.gameOverPanel.SetActive(true);
+                audioManager?.StopAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
+
             }
             else
             {
@@ -179,6 +183,8 @@ namespace Yunash.Game
             if (LoginCanvas.Instance != null && LoginCanvas.Instance.NoLivesPanel != null)
             {
                 LoginCanvas.Instance.NoLivesPanel.SetActive(true);
+                audioManager?.StopAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
+
             }
             else
             {

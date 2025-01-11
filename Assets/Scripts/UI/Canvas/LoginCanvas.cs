@@ -3,12 +3,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Yunash.Game;
+using Yunash.Audio;
+
+
 
 namespace Yunash.UI
 {
     public class LoginCanvas : CanvasBase
     {
         public static LoginCanvas Instance;
+        private AudioManager audioManager;
+
 
         public GameObject gameOverPanel;
         public GameObject loadingPanel;
@@ -39,6 +44,8 @@ namespace Yunash.UI
         {
             LoadLevelProgress();
 
+            audioManager = FindObjectOfType<AudioManager>();
+
             gameOverPanel.SetActive(false);
             gamePanel.SetActive(false);
             levelCompletePanel.SetActive(false);
@@ -53,6 +60,8 @@ namespace Yunash.UI
             else
             {
                 menuPanel.SetActive(true);
+                audioManager?.PlayAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
+
             }
         }
 
@@ -70,6 +79,8 @@ namespace Yunash.UI
             // Proceed to game panel if lives are 0 to 3
             if (lives <= 3)
             {
+                audioManager?.StopAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
+
                 menuPanel.SetActive(false);
                 gamePanel.SetActive(true);
                 UpdateLevelText();
@@ -89,6 +100,8 @@ namespace Yunash.UI
 
         public void CompleteLevel()
         {
+            audioManager?.PlayAudio(Yunash.Audio.AudioType.LevelComplete);
+
             currentLevel++;
             SaveLevelProgress();
             ShowLevelCompletePanel();
@@ -155,7 +168,8 @@ namespace Yunash.UI
             {
                 Debug.Log("Activating NoLivesPanel and deactivating gamePanel.");
                 //StartCoroutine(DeactivateGamePanelWithDelay());
-                
+                audioManager?.PlayAudio(Yunash.Audio.AudioType.Error);
+
                 gamePanel.SetActive(false);
                 NoLivesPanel.SetActive(true);
             }
