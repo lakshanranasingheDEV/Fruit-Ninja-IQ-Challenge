@@ -3748,6 +3748,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 625684055}
     - target: {fileID: 5032607996895324615, guid: 13ba593f6c935414c85d870b8105d5b1, type: 3}
+      propertyPath: moveCountText
+      value: 
+      objectReference: {fileID: 1052614785}
+    - target: {fileID: 5032607996895324615, guid: 13ba593f6c935414c85d870b8105d5b1, type: 3}
       propertyPath: nextSceneName
       value: MainGameScene 1
       objectReference: {fileID: 0}

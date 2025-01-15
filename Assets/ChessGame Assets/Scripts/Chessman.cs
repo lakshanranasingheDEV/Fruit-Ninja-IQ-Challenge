@@ -206,7 +206,7 @@ public class Chessman : MonoBehaviour
         PointMovePlate(xBoard + 1, yBoard + 1);
 
         // Add castling logic for kings
-        if (this.name == "black_king" || this.name == "white_king")
+        if (this.name == "white_king")
         {
             CastlingMovePlate();
         }
