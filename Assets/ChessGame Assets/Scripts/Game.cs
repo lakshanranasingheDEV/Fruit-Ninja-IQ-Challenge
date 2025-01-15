@@ -551,8 +551,9 @@ public class Game : MonoBehaviour
 
     public GameObject chesspiece;
 
-    public Slider moveSlider; // Reference to the slider
-    public Text moveText;     // Reference to the text below the slider
+    public Slider moveSlider; 
+    public Text moveText;     
+    public Text moveCountText;     
 
 
     private GameObject[,] positions = new GameObject[8, 8];
@@ -971,7 +972,7 @@ public class Game : MonoBehaviour
             Debug.Log($"Before increment: totalWhiteMoves = {totalWhiteMoves}");
             totalWhiteMoves++;
             moveSlider.value = totalWhiteMoves;
-            UpdateMoveUI();
+           
             Debug.Log($"After increment: totalWhiteMoves = {totalWhiteMoves}");
         }
 
@@ -994,8 +995,9 @@ public class Game : MonoBehaviour
         cm.SetYBoard(y);
         cm.SetCoords();
         SetPosition(piece);
-
+        UpdateMoveUI();
         Debug.Log($"Piece moved to new position ({x}, {y}). Total white moves: {totalWhiteMoves}");
+        moveCountText.text = $"{totalWhiteMoves}/5";
 
         // Trigger Game Over if conditions are met
         if (totalWhiteMoves >= 5)
