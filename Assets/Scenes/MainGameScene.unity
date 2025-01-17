@@ -1147,6 +1147,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1660378313}
     m_Modifications:
+    - target: {fileID: 4715176674537700216, guid: 1f43c02e85378224a8b03d5f36760976, type: 3}
+      propertyPath: _mainCuttingVelocity
+      value: 0.001
+      objectReference: {fileID: 0}
     - target: {fileID: 4715176675184656797, guid: 1f43c02e85378224a8b03d5f36760976, type: 3}
       propertyPath: m_SizeDelta.y
       value: 2466.1

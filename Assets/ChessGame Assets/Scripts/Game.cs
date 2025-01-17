@@ -38,6 +38,8 @@ public class Game : MonoBehaviour
     public GameObject endBox;
     public string nextSceneName;
     public GameObject gameOverUI;
+    public GameObject game;
+    public GameObject Boad;
 
     public GameObject settingsPanel;
     public Button soundButton;     // Sound button
@@ -56,6 +58,22 @@ public class Game : MonoBehaviour
         gameOverUI.SetActive(false);
         settingsPanel.SetActive(false);
         Time.timeScale = 0f;
+        OpenPanel();
+    }
+
+    public void OpenPanel()
+    {
+        game.SetActive(false);
+        Boad.SetActive(true);
+        Time.timeScale = 0f; // Freeze the game
+        Debug.Log("Game Paused");
+    }
+    public void ClosePanel()
+    {
+        game.SetActive(true);
+        Boad.SetActive(false);
+        Time.timeScale = 1f; // Resume the game
+        Debug.Log("Game Resumed");
     }
 
 
@@ -63,6 +81,7 @@ public class Game : MonoBehaviour
     {
         startBox.SetActive(false);
         Time.timeScale = 1f;
+        ClosePanel();
     }
 
 
@@ -70,6 +89,7 @@ public class Game : MonoBehaviour
     {
         Time.timeScale = 0f;
         endBox.SetActive(true);
+        OpenPanel();
     }
 
     private void ToggleSettingsUI()
@@ -591,6 +611,7 @@ public class Game : MonoBehaviour
         Debug.Log("Game Over! Player failed to eliminate the black chess piece.");
         Time.timeScale = 0f;
         gameOverUI.SetActive(true);
+        OpenPanel();
     }
 
 
