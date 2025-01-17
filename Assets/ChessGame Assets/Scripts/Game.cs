@@ -263,6 +263,7 @@ public class Game : MonoBehaviour
         }
     }
 
+    /*
     private IEnumerator HandleAIMove()
     {
         yield return new WaitForSeconds(1.0f);
@@ -284,6 +285,97 @@ public class Game : MonoBehaviour
                     chessman.InitiateMovePlates();
                     List<Vector2> validMoves = CollectValidMovesFromPlates();
                     Debug.Log($"Valid moves for {chessman.name}: {validMoves.Count}");
+
+                    if (validMoves.Count > 0)
+                    {
+                        int moveIndex = Random.Range(0, validMoves.Count);
+                        Vector2 target = validMoves[moveIndex];
+
+                        Debug.Log($"{chessman.name} moving to {target}.");
+                        MovePiece(piece, (int)target.x, (int)target.y);
+                        moveMade = true;
+
+                        if (blackPieceMoveCounts.ContainsKey(piece))
+                        {
+                            blackPieceMoveCounts[piece]++;
+                        }
+                        else
+                        {
+                            blackPieceMoveCounts[piece] = 1;
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"No valid moves for {chessman.name}. Removing piece.");
+
+                        LogAndRemovePiece(piece, blackPieces, randIndex);
+                    }
+
+                    ClearMovePlates();
+                }
+                else
+                {
+                    Debug.LogError("Chessman component missing on the selected piece.");
+                    blackPieces.RemoveAt(randIndex);
+                }
+            }
+            else
+            {
+                LogAndRemovePiece(piece, blackPieces, randIndex);
+            }
+
+            if (!AreBlackPiecesRemaining())
+            {
+                Debug.Log("No black pieces remaining. Checking move count.");
+                foreach (var entry in blackPieceMoveCounts)
+                {
+                    if (entry.Key != null)
+                    {
+                        Debug.Log($"Black piece {entry.Key.name} moved {entry.Value} times before elimination.");
+                    }
+                }
+                Winner("white");
+                yield break;
+            }
+        }
+
+        NextTurn();
+    }
+    */
+
+
+    private IEnumerator HandleAIMove()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        List<GameObject> blackPieces = new List<GameObject>(playerBlack);
+        bool moveMade = false;
+
+        while (!moveMade && blackPieces.Count > 0)
+        {
+            int randIndex = Random.Range(0, blackPieces.Count);
+            GameObject piece = blackPieces[randIndex];
+
+            if (piece != null)
+            {
+                var chessman = piece.GetComponent<Chessman>();
+                if (chessman != null)
+                {
+                    Debug.Log($"AI handling move for {chessman.name}.");
+                    chessman.InitiateMovePlates();
+                    List<Vector2> validMoves = CollectValidMovesFromPlates();
+                    Debug.Log($"Valid moves for {chessman.name}: {validMoves.Count}");
+
+                    // Filter valid moves to avoid cells occupied by white pieces
+                    validMoves = validMoves.FindAll(target =>
+                    {
+                        int x = (int)target.x;
+                        int y = (int)target.y;
+                        GameObject targetPiece = GetPosition(x, y);
+                        return targetPiece == null || !targetPiece.name.StartsWith("white");
+                    });
+
+                    Debug.Log($"Filtered valid moves for {chessman.name}: {validMoves.Count}");
 
                     if (validMoves.Count > 0)
                     {
@@ -404,6 +496,8 @@ public class Game : MonoBehaviour
         }
         return false;
     }
+
+
 
     public void MovePiece(GameObject piece, int x, int y)
     {
