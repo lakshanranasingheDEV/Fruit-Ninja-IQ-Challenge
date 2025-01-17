@@ -94,6 +94,7 @@ public class Game : MonoBehaviour
 
     private void ToggleSettingsUI()
     {
+        
         settingsPanel.SetActive(!settingsPanel.activeSelf); // Toggle settings UI visibility
     }
 
