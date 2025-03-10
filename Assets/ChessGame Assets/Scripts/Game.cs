@@ -637,51 +637,42 @@ public void MovePiece(GameObject piece, int x, int y)
         return;
     }
 
-    Debug.Log($"Piece name: {piece.name}, Player: {cm.player}, Moving to ({x}, {y})");
+    Debug.Log($"Piece name: {piece.name}, Player: {cm.player}, Position: ({x}, {y})");
 
-    // Check if the target position contains a black piece (eliminate if possible)
-    GameObject targetPiece = GetPosition(x, y);
-    if (targetPiece != null)
+    // Increment move count only if the piece is white
+    if (cm.player == "white")
     {
-        Chessman targetCm = targetPiece.GetComponent<Chessman>();
+        Debug.Log($"Before increment: totalWhiteMoves = {totalWhiteMoves}");
+        totalWhiteMoves++;  // Only increment for white pieces
+        moveSlider.value = totalWhiteMoves;  // Update the slider
+        moveCountText.text = $"{totalWhiteMoves}/5";  // Update the text
+        Debug.Log($"After increment: totalWhiteMoves = {totalWhiteMoves}");
+    }
+
+    totalWhiteMoves++;  // Only increment for white pieces
+        moveSlider.value = totalWhiteMoves;  // Update the slider
+        moveCountText.text = $"{totalWhiteMoves}/5";  // Update the text
+    // Update position logic
+    GameObject target = GetPosition(x, y);
+    if (target != null)
+    {
+        Chessman targetCm = target.GetComponent<Chessman>();
         if (targetCm != null && targetCm.player == "black")
         {
-            Debug.Log($"White captured black piece at ({x}, {y})!");
-
-            // Remove black piece from the game
-            playerBlack = playerBlack.Where(p => p != targetPiece).ToArray();
-            Destroy(targetPiece);
-
-            // Check if all black pieces are eliminated
-            if (!AreBlackPiecesRemaining())
-            {
-                Debug.Log("All black pieces eliminated! Player wins.");
-                Winner("white");
-                return;
-            }
+            Destroy(target);
+            Debug.Log($"White eliminated black piece at position ({x}, {y}).");
         }
     }
 
-    // Move the white piece and update position
     SetPositionEmpty(cm.GetXBoard(), cm.GetYBoard());
     cm.SetXBoard(x);
     cm.SetYBoard(y);
     cm.SetCoords();
     SetPosition(piece);
-
-    // Update Move Count (For White Pieces)
-    if (cm.player == "white")
-    {
-        totalWhiteMoves++;
-        moveSlider.value = totalWhiteMoves;
-        Debug.Log($"Updated Move Count: {totalWhiteMoves}/5");
-    }
-
-    // Update UI
-    moveCountText.text = $"{totalWhiteMoves}/5";
     UpdateMoveUI();
+    Debug.Log($"Piece moved to new position ({x}, {y}). Total white moves: {totalWhiteMoves}");
 
-    // 🔴 Game Over Trigger: If white moves reach 5 and black still exists
+    // Check if the game is over (after 5 moves or if white eliminated all black pieces)
     if (totalWhiteMoves >= 5)
     {
         Debug.Log("Game Over: White couldn't eliminate black in 5 moves!");
