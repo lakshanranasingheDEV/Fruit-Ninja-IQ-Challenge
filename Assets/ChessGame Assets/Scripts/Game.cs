@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Yunash.Game;
+using System.Linq;
 
 public class Game : MonoBehaviour
 {
@@ -307,86 +308,6 @@ public class Game : MonoBehaviour
                     List<Vector2> validMoves = CollectValidMovesFromPlates();
                     Debug.Log($"Valid moves for {chessman.name}: {validMoves.Count}");
 
-                    if (validMoves.Count > 0)
-                    {
-                        int moveIndex = Random.Range(0, validMoves.Count);
-                        Vector2 target = validMoves[moveIndex];
-
-                        Debug.Log($"{chessman.name} moving to {target}.");
-                        MovePiece(piece, (int)target.x, (int)target.y);
-                        moveMade = true;
-
-                        if (blackPieceMoveCounts.ContainsKey(piece))
-                        {
-                            blackPieceMoveCounts[piece]++;
-                        }
-                        else
-                        {
-                            blackPieceMoveCounts[piece] = 1;
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"No valid moves for {chessman.name}. Removing piece.");
-
-                        LogAndRemovePiece(piece, blackPieces, randIndex);
-                    }
-
-                    ClearMovePlates();
-                }
-                else
-                {
-                    Debug.LogError("Chessman component missing on the selected piece.");
-                    blackPieces.RemoveAt(randIndex);
-                }
-            }
-            else
-            {
-                LogAndRemovePiece(piece, blackPieces, randIndex);
-            }
-
-            if (!AreBlackPiecesRemaining())
-            {
-                Debug.Log("No black pieces remaining. Checking move count.");
-                foreach (var entry in blackPieceMoveCounts)
-                {
-                    if (entry.Key != null)
-                    {
-                        Debug.Log($"Black piece {entry.Key.name} moved {entry.Value} times before elimination.");
-                    }
-                }
-                Winner("white");
-                yield break;
-            }
-        }
-
-        NextTurn();
-    }
-    */
-
-
-    private IEnumerator HandleAIMove()
-    {
-        yield return new WaitForSeconds(1.0f);
-
-        List<GameObject> blackPieces = new List<GameObject>(playerBlack);
-        bool moveMade = false;
-
-        while (!moveMade && blackPieces.Count > 0)
-        {
-            int randIndex = Random.Range(0, blackPieces.Count);
-            GameObject piece = blackPieces[randIndex];
-
-            if (piece != null)
-            {
-                var chessman = piece.GetComponent<Chessman>();
-                if (chessman != null)
-                {
-                    Debug.Log($"AI handling move for {chessman.name}.");
-                    chessman.InitiateMovePlates();
-                    List<Vector2> validMoves = CollectValidMovesFromPlates();
-                    Debug.Log($"Valid moves for {chessman.name}: {validMoves.Count}");
-
                     // Filter valid moves to avoid cells occupied by white pieces
                     validMoves = validMoves.FindAll(target =>
                     {
@@ -453,6 +374,126 @@ public class Game : MonoBehaviour
 
         NextTurn();
     }
+*/
+
+private IEnumerator HandleAIMove()
+{
+    yield return new WaitForSeconds(1.0f);
+
+    List<GameObject> blackPieces = new List<GameObject>(playerBlack);
+    bool moveMade = false;
+
+    while (!moveMade && blackPieces.Count > 0)
+    {
+        int randIndex = Random.Range(0, blackPieces.Count);
+        GameObject piece = blackPieces[randIndex];
+
+        if (piece != null)
+        {
+            var chessman = piece.GetComponent<Chessman>();
+            if (chessman != null)
+            {
+                Debug.Log($"AI handling move for {chessman.name}.");
+                chessman.InitiateMovePlates();
+                List<Vector2> validMoves = CollectValidMovesFromPlates();
+                Debug.Log($"Valid moves for {chessman.name}: {validMoves.Count}");
+
+                Vector2? attackMove = null;
+                List<Vector2> emptyMoves = new List<Vector2>();
+
+                // Categorize moves into attack moves (where a white piece exists) and empty moves
+                foreach (var move in validMoves)
+                {
+                    int x = (int)move.x;
+                    int y = (int)move.y;
+                    GameObject targetPiece = GetPosition(x, y);
+
+                    if (targetPiece != null && targetPiece.name.StartsWith("white"))
+                    {
+                        attackMove = move; // Prioritize attack move
+                        break; // Stop searching since we found an attack move
+                    }
+                    else if (targetPiece == null)
+                    {
+                        emptyMoves.Add(move); // Store empty valid moves
+                    }
+                }
+
+                // Choose the best move
+                Vector2 chosenMove;
+                if (attackMove.HasValue)
+                {
+                    chosenMove = attackMove.Value;
+                    
+                    // Capture the white piece before moving
+                    int targetX = (int)chosenMove.x;
+                    int targetY = (int)chosenMove.y;
+                    GameObject capturedPiece = GetPosition(targetX, targetY);
+                    if (capturedPiece != null && capturedPiece.name.StartsWith("white"))
+                    {
+                        Debug.Log($"{chessman.name} captured {capturedPiece.name}!");
+                        playerWhite = playerWhite.Where(piece => piece != capturedPiece).ToArray();
+                        Destroy(capturedPiece);
+
+                    }
+                }
+                else if (emptyMoves.Count > 0)
+                {
+                    int moveIndex = Random.Range(0, emptyMoves.Count);
+                    chosenMove = emptyMoves[moveIndex];
+                }
+                else
+                {
+                    Debug.LogWarning($"No valid moves for {chessman.name}. Removing piece.");
+                    LogAndRemovePiece(piece, blackPieces, randIndex);
+                    continue;
+                }
+
+                // Move the piece
+                Debug.Log($"{chessman.name} moving to {chosenMove}.");
+                MovePiece(piece, (int)chosenMove.x, (int)chosenMove.y);
+                moveMade = true;
+
+                // Update move count
+                if (blackPieceMoveCounts.ContainsKey(piece))
+                {
+                    blackPieceMoveCounts[piece]++;
+                }
+                else
+                {
+                    blackPieceMoveCounts[piece] = 1;
+                }
+
+                ClearMovePlates();
+            }
+            else
+            {
+                Debug.LogError("Chessman component missing on the selected piece.");
+                blackPieces.RemoveAt(randIndex);
+            }
+        }
+        else
+        {
+            LogAndRemovePiece(piece, blackPieces, randIndex);
+        }
+
+        if (!AreBlackPiecesRemaining())
+        {
+            Debug.Log("No black pieces remaining. Checking move count.");
+            foreach (var entry in blackPieceMoveCounts)
+            {
+                if (entry.Key != null)
+                {
+                    Debug.Log($"Black piece {entry.Key.name} moved {entry.Value} times before elimination.");
+                }
+            }
+            Winner("white");
+            yield break;
+        }
+    }
+
+    NextTurn();
+}
 
 
     private void LogAndRemovePiece(GameObject piece, List<GameObject> blackPieces, int index)
@@ -519,7 +560,7 @@ public class Game : MonoBehaviour
     }
 
 
-
+/*
     public void MovePiece(GameObject piece, int x, int y)
     {
         if (piece == null)
@@ -579,6 +620,74 @@ public class Game : MonoBehaviour
             TriggerGameOver();
         }
     }
+    */
+
+public void MovePiece(GameObject piece, int x, int y)
+{
+    if (piece == null)
+    {
+        Debug.LogError("MovePiece: The piece is null!");
+        return;
+    }
+
+    Chessman cm = piece.GetComponent<Chessman>();
+    if (cm == null)
+    {
+        Debug.LogError("MovePiece: Chessman component not found!");
+        return;
+    }
+
+    Debug.Log($"Piece name: {piece.name}, Player: {cm.player}, Moving to ({x}, {y})");
+
+    // Check if the target position contains a black piece (eliminate if possible)
+    GameObject targetPiece = GetPosition(x, y);
+    if (targetPiece != null)
+    {
+        Chessman targetCm = targetPiece.GetComponent<Chessman>();
+        if (targetCm != null && targetCm.player == "black")
+        {
+            Debug.Log($"White captured black piece at ({x}, {y})!");
+
+            // Remove black piece from the game
+            playerBlack = playerBlack.Where(p => p != targetPiece).ToArray();
+            Destroy(targetPiece);
+
+            // Check if all black pieces are eliminated
+            if (!AreBlackPiecesRemaining())
+            {
+                Debug.Log("All black pieces eliminated! Player wins.");
+                Winner("white");
+                return;
+            }
+        }
+    }
+
+    // Move the white piece and update position
+    SetPositionEmpty(cm.GetXBoard(), cm.GetYBoard());
+    cm.SetXBoard(x);
+    cm.SetYBoard(y);
+    cm.SetCoords();
+    SetPosition(piece);
+
+    // Update Move Count (For White Pieces)
+    if (cm.player == "white")
+    {
+        totalWhiteMoves++;
+        moveSlider.value = totalWhiteMoves;
+        Debug.Log($"Updated Move Count: {totalWhiteMoves}/5");
+    }
+
+    // Update UI
+    moveCountText.text = $"{totalWhiteMoves}/5";
+    UpdateMoveUI();
+
+    // 🔴 Game Over Trigger: If white moves reach 5 and black still exists
+    if (totalWhiteMoves >= 5)
+    {
+        Debug.Log("Game Over: White couldn't eliminate black in 5 moves!");
+        TriggerGameOver();
+    }
+}
 
     public void UpdateMoveUI()
     {
