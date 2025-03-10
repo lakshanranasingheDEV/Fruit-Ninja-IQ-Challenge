@@ -2577,7 +2577,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1/5
+  m_Text: 'Moves: 0/5'
 --- !u!1 &1116838026
 GameObject:
   m_ObjectHideFlags: 0
@@ -4452,6 +4452,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 581727595}
     m_Modifications:
+    - target: {fileID: 5189939164129139972, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 64.935
+      objectReference: {fileID: 0}
+    - target: {fileID: 5189939164129139972, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -32.468
+      objectReference: {fileID: 0}
     - target: {fileID: 5189939164205765512, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -4499,6 +4507,14 @@ PrefabInstance:
     - target: {fileID: 5189939165091516106, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5189939165091516106, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -17.5137
+      objectReference: {fileID: 0}
+    - target: {fileID: 5189939165091516106, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -8.7568
       objectReference: {fileID: 0}
     - target: {fileID: 5189939165647472609, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
       propertyPath: m_Name
@@ -4570,7 +4586,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5189939165647472610, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -72
+      value: -66.4
       objectReference: {fileID: 0}
     - target: {fileID: 5189939165647472610, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4587,6 +4603,14 @@ PrefabInstance:
     - target: {fileID: 5189939165647472610, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5189939165701856945, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -13.3576
+      objectReference: {fileID: 0}
+    - target: {fileID: 5189939165701856945, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -6.6868
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7aca1c42792af43c2a327ed320ec189d, type: 3}
