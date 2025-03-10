@@ -10,35 +10,33 @@ public class Chessman : MonoBehaviour
 
     private bool hasMoved = false;
 
-    //References to objects in our Unity Scene
+    
     public GameObject controller;
     public GameObject movePlate;
 
-    //Position for this Chesspiece on the Board
-    //The correct position will be set later
+   
     private int xBoard = -1;
     private int yBoard = -1;
 
-    //Variable for keeping track of the player it belongs to "black" or "white"
+    
     public string player;
 
-    //References to all the possible Sprites that this Chesspiece could be
+    
     public Sprite black_queen, black_knight, black_bishop, black_king, black_rook, black_pawn;
     public Sprite white_queen, white_knight, white_bishop, white_king, white_rook, white_pawn;
 
     public void Activate()
     {
-        board = GameObject.Find("Board"); // Ensure the board GameObject is named "Board" in the hierarchy
+        board = GameObject.Find("Board"); 
 
-        //Get the game controller
+       
         controller = GameObject.FindGameObjectWithTag("GameController");
 
-        //Take the instantiated location and adjust transform
         SetCoords();
 
         
 
-        //Choose correct sprite based on piece's name
+      
         switch (this.name)
         {
             case "black_queen": this.GetComponent<SpriteRenderer>().sprite = black_queen; player = "black"; break;
@@ -58,19 +56,18 @@ public class Chessman : MonoBehaviour
 
     public void SetCoords()
     {
-        //Get the board value in order to convert to xy coords
+        
         float x = xBoard;
         float y = yBoard;
 
-        //Adjust by variable offset
+       
         x *= 0.56f;
         y *= 0.56f;
 
-        //Add constants (pos 0,0)
+        
         x += -1.8f;
         y += -2.3f;
 
-        //Set actual unity values
         this.transform.position = new Vector3(x -0.15f , y, -1.0f);
     }
 
@@ -98,17 +95,17 @@ public class Chessman : MonoBehaviour
     {
         if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetCurrentPlayer() == player)
         {
-            //Remove all moveplates relating to previously selected piece
+           
             DestroyMovePlates();
 
-            //Create new MovePlates
+            
             InitiateMovePlates();
         }
     }
 
     public void DestroyMovePlates()
     {
-        //Destroy old MovePlates
+        
         GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
         for (int i = 0; i < movePlates.Length; i++)
         {
@@ -205,7 +202,7 @@ public class Chessman : MonoBehaviour
         PointMovePlate(xBoard + 1, yBoard - 1);
         PointMovePlate(xBoard + 1, yBoard + 1);
 
-        // Add castling logic for kings
+        
         if (this.name == "white_king")
         {
             CastlingMovePlate();
@@ -222,14 +219,14 @@ public class Chessman : MonoBehaviour
             return;
         }
 
-        // Kingside castling
+        
         if (sc.CanCastle(xBoard, yBoard, "kingside", player))
         {
             Debug.Log("Kingside castling allowed.");
             MovePlateSpawn(xBoard + 2, yBoard);
         }
 
-        // Queenside castling
+       
         if (sc.CanCastle(xBoard, yBoard, "queenside", player))
         {
             Debug.Log("Queenside castling allowed.");
@@ -248,7 +245,6 @@ public class Chessman : MonoBehaviour
         return hasMoved;
     }
 
-    // Call this method when the king or rook moves to set the hasMoved flag
     private void MovePiece(int newX, int newY)
     {
         SetXBoard(newX);
@@ -299,22 +295,18 @@ public class Chessman : MonoBehaviour
 
     public void MovePlateSpawn(int matrixX, int matrixY)
     {
-        //Get the board value in order to convert to xy coords
+       
         float x = matrixX;
         float y = matrixY;
 
         x *= 0.56f;
         y *= 0.56f;
 
-        //Add constants (pos 0,0)
         x += -1.8f;
         y += -2.3f;
 
-        //Set actual unity values
         GameObject mp = Instantiate(movePlate, new Vector3(x - 0.15f, y, -1.0f), Quaternion.identity);
 
-        // Set the move plate's parent to the board
-        //mp.transform.SetParent(board.transform);
 
         MovePlate mpScript = mp.GetComponent<MovePlate>();
         mpScript.SetReference(gameObject);
@@ -324,18 +316,15 @@ public class Chessman : MonoBehaviour
 
     public void MovePlateAttackSpawn(int matrixX, int matrixY)
     {
-        //Get the board value in order to convert to xy coords
         float x = matrixX;
         float y = matrixY;
 
         x *= 0.56f;
         y *= 0.56f;
 
-        //Add constants (pos 0,0)
         x += -1.8f;
         y += -2.3f;
 
-        //Set actual unity values
         GameObject mp = Instantiate(movePlate, new Vector3(x - 0.15f, y, -1.0f), Quaternion.identity);
 
         MovePlate mpScript = mp.GetComponent<MovePlate>();
@@ -349,7 +338,6 @@ public class Chessman : MonoBehaviour
     {
         if (!controller.GetComponent<Game>().PositionOnBoard(x, y)) return false;
 
-        // Check if the target position is empty or has an enemy piece
         GameObject target = controller.GetComponent<Game>().GetPosition(x, y);
         if (target == null || target.GetComponent<Chessman>().player != this.player)
             return true;
