@@ -74,9 +74,11 @@ public class FruitSpawner : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("Fruit Spawner Started");
         StartCoroutine(SpawnFruits());
     }
 
+    
     IEnumerator SpawnFruits()
     {
         while (true)
@@ -84,7 +86,8 @@ public class FruitSpawner : MonoBehaviour
             float delay = Random.Range(minDelay, maxDelay);
             yield return new WaitForSeconds(delay);
 
-            // Randomly pick a spawn point
+            Debug.Log("Spawning fruit... Counter: " + fruitCounter); 
+
             int spawnIndex = Random.Range(0, spawnPoints.Length);
             Transform spawnPoint = spawnPoints[spawnIndex];
 
@@ -92,31 +95,26 @@ public class FruitSpawner : MonoBehaviour
 
             if (fruitCounter < 5)
             {
-                // Spawn a fruit
                 int fruitIndex = Random.Range(0, fruitPrefabs.Length);
                 prefabToSpawn = fruitPrefabs[fruitIndex];
-                fruitCounter++; // Increment the fruit counter
+                fruitCounter++; 
             }
             else
             {
-                // After 5 fruits, decide whether to spawn a bomb based on the chance
                 if (Random.value < bombSpawnChance)
                 {
-                    prefabToSpawn = bombPrefab; // Spawn a bomb
+                    prefabToSpawn = bombPrefab; 
                 }
                 else
                 {
-                    // Spawn a fruit if bomb chance fails
                     int fruitIndex = Random.Range(0, fruitPrefabs.Length);
                     prefabToSpawn = fruitPrefabs[fruitIndex];
                 }
-                fruitCounter = 0; // Reset the counter
+                fruitCounter = 0; 
             }
 
-            // Spawn the chosen prefab
             GameObject spawnedObject = Instantiate(prefabToSpawn, spawnPoint.position, spawnPoint.rotation);
 
-            // Destroy the spawned object after 5 seconds
             Destroy(spawnedObject, 5f);
         }
     }

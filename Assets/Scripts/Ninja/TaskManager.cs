@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Yunash.UI;
 using Yunash.Audio;
+using UnityEngine.SceneManagement;
+
 
 
 public class TaskManager : MonoBehaviour
@@ -35,6 +37,7 @@ public class TaskManager : MonoBehaviour
 
     public List<LevelConfig> levels;
     public Button nextButton;
+    public Button restartButton;
 
     private void Awake()
     {
@@ -67,6 +70,15 @@ public class TaskManager : MonoBehaviour
         else
         {
             Debug.LogWarning("Next Button is not assigned in the inspector.");
+        }
+
+        if (restartButton != null)
+        {
+            restartButton.onClick.AddListener(OnRestartButtonClick);
+        }
+        else
+        {
+            Debug.LogWarning("Restart Button is not assigned in the inspector.");
         }
     }
 
@@ -168,11 +180,44 @@ public class TaskManager : MonoBehaviour
         }
 
         ActivateLevelGameObject(currentLevel);
-
+        
         SaveGameProgress();
         UpdateLevelText();
         SetRandomTask();
     }
+
+    private void OnRestartButtonClick()
+    {
+        // Hide the level complete panel if it's active
+        if (LoginCanvas.Instance != null && LoginCanvas.Instance.levelCompletePanel != null)
+        {
+            LoginCanvas.Instance.levelCompletePanel.SetActive(false);
+            LoginCanvas.Instance.menuPanel.SetActive(false);
+            LoginCanvas.Instance.gamePanel.SetActive(true);
+
+        }
+        else
+        {
+            Debug.LogWarning("LoginCanvas or levelCompletePanel is not assigned.");
+        }
+        SceneManager.LoadScene("MainGameScene");
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        LoadGameProgress();  
+
+        InitializeGame();
+       
+
+        Time.timeScale = 1f; 
+        Debug.Log($"Level {currentLevel} restarted!");
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+
+
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
 
     private void ActivateLevelGameObject(int level, bool activate = true)
     {

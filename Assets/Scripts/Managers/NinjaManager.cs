@@ -7,23 +7,20 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro; 
 
 namespace Yunash.Game
 {
     public class NinjaManager : MonoBehaviour
     {
-
-
         public static NinjaManager Instance;
         private AudioManager audioManager;
 
-
-        // public Text scoreText;
         public Image[] lifeIcons;
         public Sprite lostLifeSprite;
 
         [Header("Score Settings")]
-        [SerializeField] private List<Text> scoreTexts; // List of all score UI elements
+        [SerializeField] private List<TextMeshProUGUI> scoreTexts; // Use TextMeshProUGUI instead of Text
         private int score = 0;
 
         private int lives = 3;
@@ -42,32 +39,25 @@ namespace Yunash.Game
             {
                 Instance = this;
             }
-
         }
 
         private void Start()
         {
             LoadGameProgress();
-            //ResetGameProgress();
-            //RestoreAllLives();
             if (lives <= 0)
             {
                 ShowNoLevelPanel();
-
             }
 
             UpdateScoreUI();
             UpdateLivesUI();
-
-
         }
 
         public void AddScore(int amount)
         {
-            SaveGameProgress();
             score += amount;
+            SaveGameProgress();
             UpdateScoreUI();
-
         }
 
         public void SubtractLife()
@@ -87,15 +77,13 @@ namespace Yunash.Game
 
         private void UpdateScoreUI()
         {
-            foreach (Text scoreText in scoreTexts)
+            foreach (TextMeshProUGUI scoreText in scoreTexts)
             {
                 if (scoreText != null)
                 {
                     scoreText.text = score.ToString();
                 }
             }
-
-            // scoreText.text = score.ToString();
         }
 
         private void UpdateLivesUI()
@@ -115,8 +103,8 @@ namespace Yunash.Game
 
         public void RestoreAllLives()
         {
-            lives = lifeIcons.Length; // Reset lives to the maximum
-            UpdateLivesUI();          // Update the UI to reflect the new lives count
+            lives = lifeIcons.Length;
+            UpdateLivesUI();
             SaveGameProgress(false);
         }
 
@@ -131,14 +119,12 @@ namespace Yunash.Game
             Debug.Log($"Game progress saved: Lives = {lives}, Score = {score} (Score saved: {saveScore})");
         }
 
-
         private void GameOver()
         {
             if (LoginCanvas.Instance != null && LoginCanvas.Instance.gameOverPanel != null)
             {
                 LoginCanvas.Instance.gameOverPanel.SetActive(true);
                 audioManager?.StopAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
-
             }
             else
             {
@@ -171,7 +157,6 @@ namespace Yunash.Game
             Debug.Log($"Loaded score: {score}");
         }
 
-
         public void ResetGameProgress()
         {
             PlayerPrefs.DeleteKey(ScoreKey);
@@ -184,16 +169,11 @@ namespace Yunash.Game
             {
                 LoginCanvas.Instance.NoLivesPanel.SetActive(true);
                 audioManager?.StopAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
-
             }
             else
             {
                 Debug.LogError("GameManager: NoLivesPanel: LoginCanvas or NoLivesPanel is not set!");
             }
-
         }
     }
-
-
-
 }
