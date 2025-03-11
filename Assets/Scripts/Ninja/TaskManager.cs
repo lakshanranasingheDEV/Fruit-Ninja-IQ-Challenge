@@ -90,6 +90,7 @@ public class TaskManager : MonoBehaviour
         UpdateLevelText();
     }
 
+
     public void SetRandomTask()
     {
         targetFruit = fruitTags[Random.Range(0, fruitTags.Length)];
@@ -118,7 +119,7 @@ public class TaskManager : MonoBehaviour
         taskText.text = taskCount.ToString();
     }
 
-    private void UpdateLevelText()
+    public void UpdateLevelText()
     {
         Debug.Log($"Current Level: {currentLevel}");
     }
@@ -219,7 +220,7 @@ public class TaskManager : MonoBehaviour
     }
 
 
-    private void ActivateLevelGameObject(int level, bool activate = true)
+    public void ActivateLevelGameObject(int level, bool activate = true)
     {
         LevelConfig levelConfig = levels.Find(l => l.levelNumber == level);
 
@@ -233,7 +234,7 @@ public class TaskManager : MonoBehaviour
         }
     }
 
-    private void DeactivateAllLevels()
+    public void DeactivateAllLevels()
     {
         foreach (var level in levels)
         {
