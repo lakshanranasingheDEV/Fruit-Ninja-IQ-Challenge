@@ -148,9 +148,10 @@ public class Game_L : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainGameScene");
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+/*
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "MainGameScene" && NinjaManager.Instance != null)
@@ -165,6 +166,7 @@ public class Game_L : MonoBehaviour
 
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+*/
 
     //
 
