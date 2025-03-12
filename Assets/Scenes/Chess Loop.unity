@@ -438,7 +438,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7338290749474252350, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_text
-      value: Restart the game
+      value: Replay the game
       objectReference: {fileID: 0}
     - target: {fileID: 7338290749474252350, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_fontSize
@@ -3424,7 +3424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7338290750712921637, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartGame
+      value: GoToNextScene
       objectReference: {fileID: 0}
     - target: {fileID: 7338290750712921637, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
