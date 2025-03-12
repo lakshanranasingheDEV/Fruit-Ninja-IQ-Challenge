@@ -39,18 +39,13 @@ public class LevelButtonNumberUpdater : MonoBehaviour
         {
             levelMenu.OpenLevel(levelId);
         }
-        else if (TaskManager.Instance != null) // Use TaskManager instead of SceneLoader
+        else if (sceneLoader != null)
         {
-            TaskManager.Instance.DeactivateAllLevels(); // Ensure only one level is active
-            TaskManager.Instance.ActivateLevelGameObject(levelId);
-            TaskManager.Instance.currentLevel = levelId;
-            TaskManager.Instance.SetRandomTask(); // Set a new task for the level
-            TaskManager.Instance.UpdateLevelText();
+            sceneLoader.LoadScene(levelId);
         }
         else
         {
-            Debug.LogError("Neither LevelMenu nor TaskManager reference is set in LevelButtonNumberUpdater");
+            Debug.LogError("Neither LevelMenu nor SceneLoader reference is set in LevelButtonNumberUpdater");
         }
     }
-
 }
