@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4427528937630144107}
   - component: {fileID: 4427528937630144106}
-  - component: {fileID: -2373885501937261353}
+  - component: {fileID: -567854714698629380}
   - component: {fileID: -3114578102174500034}
   m_Layer: 0
   m_Name: MovePlate
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-2373885501937261353
+--- !u!114 &-567854714698629380
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4427528937630144105}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4cb13e8428b1dd47b4ad678e76d0683, type: 3}
+  m_Script: {fileID: 11500000, guid: 8299c581ff9a0dc4593d700980ec8d72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
