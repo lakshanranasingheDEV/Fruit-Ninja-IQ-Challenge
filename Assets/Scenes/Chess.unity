@@ -468,6 +468,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_TextType-MainButton_Green
       objectReference: {fileID: 0}
+    - target: {fileID: 7338290750712921636, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 05635dc0b2e38494a8926bc193d12085, type: 3}
     - target: {fileID: 7338290750712921637, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -625,6 +629,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Music Button
       objectReference: {fileID: 0}
+    - target: {fileID: 7338290750712921636, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 05635dc0b2e38494a8926bc193d12085, type: 3}
     - target: {fileID: 7338290750712921637, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -1134,6 +1142,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7338290750712921636, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 05635dc0b2e38494a8926bc193d12085, type: 3}
     - target: {fileID: 7338290750712921637, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -1351,10 +1363,22 @@ PrefabInstance:
       propertyPath: m_HorizontalAlignment
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7338290749474252351, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7338290750712921632, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_Name
       value: Button_TextType-MainButton_Green
       objectReference: {fileID: 0}
+    - target: {fileID: 7338290750712921636, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7338290750712921636, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 05635dc0b2e38494a8926bc193d12085, type: 3}
     - target: {fileID: 7338290750712921637, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -1977,7 +2001,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 3}
+  m_AnchoredPosition: {x: 0, y: -3}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &764607657
@@ -2260,6 +2284,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sound Button
       objectReference: {fileID: 0}
+    - target: {fileID: 7338290750712921636, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 05635dc0b2e38494a8926bc193d12085, type: 3}
     - target: {fileID: 7338290750712921637, guid: 201cfb4fad2504fc3952fac130aa8718, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -3143,8 +3171,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Checkmate in 5 moves
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 162f7f16c4bec41ff98f811bd90e7b6e, type: 2}
-  m_sharedMaterial: {fileID: 6447333859754382329, guid: 162f7f16c4bec41ff98f811bd90e7b6e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa2f3c655b3634b2b852b64fd197fd58, type: 2}
+  m_sharedMaterial: {fileID: 6447333859754382329, guid: aa2f3c655b3634b2b852b64fd197fd58, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5011,7 +5039,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 4}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2092875772
