@@ -2,24 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FruitSpawner : MonoBehaviour
+public class FruitSpawnerLoop : MonoBehaviour
 {
-    public GameObject[] fruitPrefabs; // Array to hold multiple fruit prefabs
-    public GameObject bombPrefab;    // Bomb prefab
-    public Transform[] spawnPoints;   // Array of spawn points
+    public static FruitSpawnerLoop Instance; // Singleton reference
 
-    public float minDelay = 0.1f;     // Minimum delay between spawns
-    public float maxDelay = 1.0f;     // Maximum delay between spawns
+    public GameObject[] fruitPrefabs;
+    public GameObject bombPrefab;
+    public Transform[] spawnPoints;
 
-    private int fruitCounter = 0;     // Counter to track fruits spawned
-    public float bombSpawnChance = 0.7f; // Probability of spawning a bomb (0.0 to 1.0)
+    public float minDelay = 0.5f;
+    public float maxDelay = 1.5f;
+
+    private int fruitCounter = 0;
+    public float bombSpawnChance = 0.7f;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
-        Debug.Log("Fruit Spawner Started");
         StartCoroutine(SpawnFruits());
     }
-
 
     IEnumerator SpawnFruits()
     {
@@ -27,8 +39,6 @@ public class FruitSpawner : MonoBehaviour
         {
             float delay = Random.Range(minDelay, maxDelay);
             yield return new WaitForSeconds(delay);
-
-            Debug.Log("Spawning fruit... Counter: " + fruitCounter);
 
             int spawnIndex = Random.Range(0, spawnPoints.Length);
             Transform spawnPoint = spawnPoints[spawnIndex];
@@ -56,8 +66,14 @@ public class FruitSpawner : MonoBehaviour
             }
 
             GameObject spawnedObject = Instantiate(prefabToSpawn, spawnPoint.position, spawnPoint.rotation);
-
             Destroy(spawnedObject, 5f);
         }
+    }
+
+    public void IncreaseSpawnSpeed()
+    {
+        minDelay = Mathf.Max(0.1f, minDelay - 0.05f);
+        maxDelay = Mathf.Max(0.3f, maxDelay - 0.1f);
+        Debug.Log($"Spawn Speed Increased: Min Delay {minDelay}, Max Delay {maxDelay}");
     }
 }

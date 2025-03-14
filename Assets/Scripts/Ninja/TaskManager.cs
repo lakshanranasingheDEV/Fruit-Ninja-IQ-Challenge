@@ -173,19 +173,19 @@ public class TaskManager : MonoBehaviour
             Debug.LogWarning("LoginCanvas or levelCompletePanel is not set!");
         }
 
+        // Reset to level 1 when reaching level 15
         if (currentLevel > levels.Count)
         {
-            Debug.Log("All levels completed!");
-           
-            return;
+            Debug.Log("All levels completed! Restarting from Level 1...");
+            currentLevel = 1; // Reset the level
         }
 
         ActivateLevelGameObject(currentLevel);
-        
         SaveGameProgress();
         UpdateLevelText();
         SetRandomTask();
     }
+
 
     private void OnRestartButtonClick()
     {

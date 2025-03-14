@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Yunash.Game;
 
-public class Fruit : MonoBehaviour
+public class FruitLoop : MonoBehaviour
 {
     public GameObject fruitSlicingPrefab; // Prefab for the sliced fruit effect
     public GameObject floatingTextPrefab; // Prefab for floating text
@@ -69,12 +69,12 @@ public class Fruit : MonoBehaviour
             }
             else
             {
-                NinjaManager.Instance.AddScore(1); // Add points for normal fruits
+                
                 NinjaManager1Loop.Instance.AddScore(1); // Add points for normal fruits
             }
 
             // Notify TaskManager
-            TaskManager.Instance.DecrementTaskCount(gameObject);
+            TaskManager1.Instance.DecrementTaskCount(gameObject);
         }
     }
 }

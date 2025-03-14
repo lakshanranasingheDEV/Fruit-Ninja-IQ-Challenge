@@ -102,6 +102,16 @@ namespace Yunash.UI
             SceneManager.LoadScene("Chess");
         }
 
+        public void OnPressedChessLoopPlayButton()
+        {
+            SceneManager.LoadScene("Chess Loop");
+        }
+
+        public void OnPresseFruitNinjaLoopPlayButton()
+        {
+            SceneManager.LoadScene("FruitNinjaLoop");
+        }
+
         public void CompleteLevel()
         {
             audioManager?.PlayAudio(Yunash.Audio.AudioType.LevelComplete);
@@ -191,10 +201,7 @@ namespace Yunash.UI
             Debug.Log("GamePanel deactivated after delay.");
         }
 
-        public void showMissionPanel()
-        {
-            MissionPanel.SetActive(true);
-        }
+        
 
     }
 }
