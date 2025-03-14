@@ -92,6 +92,7 @@ public class Game_L : MonoBehaviour
         endBox.SetActive(true);
         OpenPanel();
     }
+    
 
     private void ToggleSettingsUI()
     {
@@ -99,6 +100,10 @@ public class Game_L : MonoBehaviour
         settingsPanel.SetActive(!settingsPanel.activeSelf); 
     }
 
+    public void CloseSettingsUI()
+    {
+        settingsPanel.SetActive(false);
+    }
 
     private void ToggleSound()
     {

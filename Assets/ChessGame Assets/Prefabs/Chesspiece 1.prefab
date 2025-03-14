@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 2692184396404375448}
   - component: {fileID: 2692184396404375455}
   - component: {fileID: 7068999908475216718}
-  - component: {fileID: -4332548628332568567}
+  - component: {fileID: -6844906340954972622}
   m_Layer: 7
-  m_Name: Chesspiece
+  m_Name: Chesspiece 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -112,7 +112,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-4332548628332568567
+--- !u!114 &-6844906340954972622
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2692184396404375449}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 664e782ff14c3a04c959275227e71760, type: 3}
+  m_Script: {fileID: 11500000, guid: faaab8980d11c0e4590857e5fbf11cc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 0}

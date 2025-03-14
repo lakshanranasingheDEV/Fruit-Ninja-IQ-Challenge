@@ -98,7 +98,11 @@ public class Game : MonoBehaviour
         
         settingsPanel.SetActive(!settingsPanel.activeSelf); 
     }
-
+    
+    public void CloseSettingsUI()
+    {
+        settingsPanel.SetActive(false);
+    }
 
     private void ToggleSound()
     {
