@@ -91,6 +91,7 @@ namespace Yunash.UI
         {
             menuPanel.SetActive(true);
             gameOverPanel.SetActive(false);
+            gamePanel.SetActive(false);
             levelCompletePanel?.SetActive(false);
         }
 

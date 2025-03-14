@@ -314,8 +314,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -49}
-  m_SizeDelta: {x: 0, y: 98}
+  m_AnchoredPosition: {x: 205, y: -49}
+  m_SizeDelta: {x: 410, y: 98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &385137976
 MonoBehaviour:
@@ -5000,7 +5000,8 @@ PrefabInstance:
       propertyPath: levels.Array.data[14].levelGameObject
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4252013423857939751, guid: c818dd1ade11dcf49930b6f056fb2401, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c818dd1ade11dcf49930b6f056fb2401, type: 3}
 --- !u!1 &6288432371116496056
 GameObject:

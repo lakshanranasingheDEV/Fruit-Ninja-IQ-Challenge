@@ -65,12 +65,12 @@ public class Fruit : MonoBehaviour
             // Update score
             if (harmful)
             {
-                NinjaManager1Loop.Instance.SubtractLife();
+                NinjaManager.Instance.SubtractLife();
             }
             else
             {
                 NinjaManager.Instance.AddScore(1); // Add points for normal fruits
-                NinjaManager1Loop.Instance.AddScore(1); // Add points for normal fruits
+                
             }
 
             // Notify TaskManager

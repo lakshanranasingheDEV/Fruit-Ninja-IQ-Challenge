@@ -35,6 +35,7 @@ namespace Yunash.UI
         {
             LoadLevelProgress();
             gamePanel.SetActive(true);
+            gameOverPanel.SetActive(false);
             audioManager = FindObjectOfType<AudioManager>();
 
            

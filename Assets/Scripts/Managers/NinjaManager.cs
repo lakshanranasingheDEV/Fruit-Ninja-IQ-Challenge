@@ -43,6 +43,7 @@ namespace Yunash.Game
 
         private void Start()
         {
+            lives = lifeIcons.Length;
             LoadGameProgress();
             if (lives <= 0)
             {
