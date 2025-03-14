@@ -1509,7 +1509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17e516b2aeecbcd418a4346a65696202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chesspiece: {fileID: 2692184396404375449, guid: 915e3d2f2d245114d8cfae431dea5f1b, type: 3}
+  chesspiece: {fileID: 2692184396404375449, guid: 32c511961046cc046a18942d349b74b5, type: 3}
   moveSlider: {fileID: 1875192547}
   moveText: {fileID: 1052614785}
   moveCountText: {fileID: 1052614785}
