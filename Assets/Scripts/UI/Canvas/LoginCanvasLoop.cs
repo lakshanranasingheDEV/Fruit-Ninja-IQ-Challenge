@@ -64,7 +64,10 @@ namespace Yunash.UI
             // Update level text if needed
         }
 
-      
+      public void Restart()
+        {
+            SceneManager.LoadScene("FruitNinjaLoop");
+        }
         
     
 

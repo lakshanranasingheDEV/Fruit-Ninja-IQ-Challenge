@@ -108,9 +108,9 @@ namespace Yunash.Game
 
         private void GameOver()
         {
-            if (LoginCanvas.Instance != null && LoginCanvas.Instance.gameOverPanel != null)
+            if (LoginCanvasLoop.Instance != null && LoginCanvasLoop.Instance.gameOverPanel != null)
             {
-                LoginCanvas.Instance.gameOverPanel.SetActive(true);
+                LoginCanvasLoop.Instance.gameOverPanel.SetActive(true);
                 audioManager?.StopAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
             }
             else

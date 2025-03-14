@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &655342248113491497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 655342248113491496}
+  - component: {fileID: 655342248113491503}
+  m_Layer: 0
+  m_Name: TaskManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &655342248113491496
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655342248113491497}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &655342248113491503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655342248113491497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b921df4e375cfee4497b42dd9254f173, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  taskText: {fileID: 0}
+  taskFruitImage: {fileID: 0}
+  fruitSprites:
+  - {fileID: 1715721736, guid: e2876da481dd4f74ba12ad735edf5ec1, type: 3}
+  - {fileID: -2101897022, guid: e2876da481dd4f74ba12ad735edf5ec1, type: 3}
+  currentLevel: 1
+  levels:
+  - levelNumber: 1
+    minCount: 5
+    maxCount: 10
+    levelGameObject: {fileID: 0}
+  - levelNumber: 2
+    minCount: 8
+    maxCount: 10
+    levelGameObject: {fileID: 0}
+  - levelNumber: 3
+    minCount: 10
+    maxCount: 15
+    levelGameObject: {fileID: 0}
+  - levelNumber: 4
+    minCount: 15
+    maxCount: 20
+    levelGameObject: {fileID: 0}
+  - levelNumber: 5
+    minCount: 15
+    maxCount: 20
+    levelGameObject: {fileID: 0}
+  - levelNumber: 6
+    minCount: 20
+    maxCount: 23
+    levelGameObject: {fileID: 0}
+  - levelNumber: 7
+    minCount: 23
+    maxCount: 25
+    levelGameObject: {fileID: 0}
+  - levelNumber: 8
+    minCount: 23
+    maxCount: 25
+    levelGameObject: {fileID: 0}
+  - levelNumber: 9
+    minCount: 23
+    maxCount: 25
+    levelGameObject: {fileID: 0}
+  - levelNumber: 10
+    minCount: 23
+    maxCount: 25
+    levelGameObject: {fileID: 0}
+  - levelNumber: 10
+    minCount: 25
+    maxCount: 30
+    levelGameObject: {fileID: 0}
+  - levelNumber: 10
+    minCount: 28
+    maxCount: 32
+    levelGameObject: {fileID: 0}
+  - levelNumber: 10
+    minCount: 32
+    maxCount: 35
+    levelGameObject: {fileID: 0}
+  - levelNumber: 10
+    minCount: 34
+    maxCount: 38
+    levelGameObject: {fileID: 0}
+  - levelNumber: 10
+    minCount: 34
+    maxCount: 40
+    levelGameObject: {fileID: 0}
+  nextButton: {fileID: 0}
+  restartButton: {fileID: 0}

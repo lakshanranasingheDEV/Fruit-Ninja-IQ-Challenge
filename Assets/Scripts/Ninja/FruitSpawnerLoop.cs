@@ -74,6 +74,11 @@ public class FruitSpawnerLoop : MonoBehaviour
     {
         minDelay = Mathf.Max(0.1f, minDelay - 0.05f);
         maxDelay = Mathf.Max(0.3f, maxDelay - 0.1f);
-        Debug.Log($"Spawn Speed Increased: Min Delay {minDelay}, Max Delay {maxDelay}");
+
+        // Increase bomb spawn chance but cap it at 90% (0.9)
+        bombSpawnChance = Mathf.Min(0.9f, bombSpawnChance + 0.05f);
+
+        Debug.Log($"Spawn Speed Increased: Min Delay {minDelay}, Max Delay {maxDelay}, Bomb Spawn Chance {bombSpawnChance}");
     }
+
 }
