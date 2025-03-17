@@ -74,7 +74,7 @@ public class FruitLoop : MonoBehaviour
             }
 
             // Notify TaskManager
-            TaskManager1.Instance.DecrementTaskCount(gameObject);
+            TaskManagerLoop.Instance.DecrementTaskCount(gameObject);
         }
     }
 }

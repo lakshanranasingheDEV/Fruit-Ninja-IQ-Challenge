@@ -17,6 +17,8 @@ namespace Yunash.UI
         public GameObject gamePanel;
 
         public GameObject gameOverPanel;
+        public GameObject pausePanel;
+
 
        
         private void Awake()
@@ -36,6 +38,7 @@ namespace Yunash.UI
             LoadLevelProgress();
             gamePanel.SetActive(true);
             gameOverPanel.SetActive(false);
+            pausePanel.SetActive(false);
             audioManager = FindObjectOfType<AudioManager>();
 
            
@@ -76,6 +79,19 @@ namespace Yunash.UI
         {
            
             PlayerPrefs.Save();
+        }
+
+        public void openPauseButton()
+        {
+            Time.timeScale = 0f;
+            pausePanel.SetActive(true);
+
+        }
+        public void continueButton()
+        {
+            Time.timeScale = 1f;
+            pausePanel.SetActive(false);
+
         }
 
        

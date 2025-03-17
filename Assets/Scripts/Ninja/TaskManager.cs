@@ -255,4 +255,18 @@ public class TaskManager : MonoBehaviour
     {
         currentLevel = PlayerPrefs.GetInt(CurrentLevelKey, 1);
     }
+
+    public void Restart()
+    {
+        LoadGameProgress();
+        if (LoginCanvas.Instance != null && LoginCanvas.Instance.pausePanel != null)
+        {
+            LoginCanvas.Instance.pausePanel.SetActive(false);
+            Time.timeScale = 1f;
+        }
+        else
+        {
+            Debug.LogWarning("LoginCanvas or levelCompletePanel is not set!");
+        }
+    }
 }

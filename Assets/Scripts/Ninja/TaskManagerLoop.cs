@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TaskManager1 : MonoBehaviour
+public class TaskManagerLoop : MonoBehaviour
 {
-    public static TaskManager1 Instance;
+    public static TaskManagerLoop Instance;
 
     public Text taskText;
     public Image taskFruitImage;

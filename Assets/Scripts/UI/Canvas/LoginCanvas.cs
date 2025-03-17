@@ -21,6 +21,7 @@ namespace Yunash.UI
         public GameObject gamePanel;
         public GameObject levelCompletePanel;
         public GameObject NoLivesPanel;
+        public GameObject pausePanel;
         public Slider loadingSlider;
 
         private int currentLevel;
@@ -51,6 +52,7 @@ namespace Yunash.UI
             levelCompletePanel.SetActive(false);
             NoLivesPanel.SetActive(false);
             menuPanel.SetActive(false);
+            pausePanel.SetActive(false);
 
             // Check if it's the first time launching the game
             if (IsFirstTime())
@@ -73,6 +75,7 @@ namespace Yunash.UI
             if (lives == 0)
             {
                 gamePanel.SetActive(false);
+                pausePanel.SetActive(false);
                 ShowNoLivesPanel();
             }
 
@@ -82,6 +85,7 @@ namespace Yunash.UI
                 audioManager?.StopAudio(Yunash.Audio.AudioType.IdleBackgroundMusic);
 
                 menuPanel.SetActive(false);
+                pausePanel.SetActive(false);
                 gamePanel.SetActive(true);
                 UpdateLevelText();
             }
@@ -108,6 +112,11 @@ namespace Yunash.UI
         public void OnPresseFruitNinjaLoopPlayButton()
         {
             SceneManager.LoadScene("FruitNinjaLoop");
+        }
+
+        public void OnPresseHomeButton()
+        {
+            SceneManager.LoadScene("MainGameScene");
         }
 
         public void CompleteLevel()
@@ -190,6 +199,19 @@ namespace Yunash.UI
                 Debug.LogError("NoLivesPanel is not assigned in the LoginCanvas!");
             }
             Time.timeScale = 0f;
+        }
+
+        public void openPauseButton()
+        {
+            Time.timeScale = 0f;
+            pausePanel.SetActive(true);
+
+        }
+        public void continueButton()
+        {
+            Time.timeScale = 1f;
+            pausePanel.SetActive(false);
+
         }
 
         private IEnumerator DeactivateGamePanelWithDelay()
