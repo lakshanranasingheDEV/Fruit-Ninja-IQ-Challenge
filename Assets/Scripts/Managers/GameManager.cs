@@ -21,7 +21,7 @@ namespace Yunash.Game
         public IAudioService AudioService;
         public IDataService DataService;
 
-        
+
         private void Awake()
         {
             if (Instance != null)
@@ -49,7 +49,7 @@ namespace Yunash.Game
             Time.timeScale = 1f;
 
         }
-        
+
     }
 
 }

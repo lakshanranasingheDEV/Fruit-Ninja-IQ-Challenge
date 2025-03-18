@@ -22,6 +22,7 @@ namespace Yunash.UI
         public GameObject levelCompletePanel;
         public GameObject NoLivesPanel;
         public GameObject pausePanel;
+        public GameObject settingPanel;
         public Slider loadingSlider;
 
         private int currentLevel;
@@ -53,6 +54,7 @@ namespace Yunash.UI
             NoLivesPanel.SetActive(false);
             menuPanel.SetActive(false);
             pausePanel.SetActive(false);
+            settingPanel.SetActive(false);
 
             // Check if it's the first time launching the game
             if (IsFirstTime())
@@ -211,6 +213,19 @@ namespace Yunash.UI
         {
             Time.timeScale = 1f;
             pausePanel.SetActive(false);
+
+        }
+        public void OpensettingButton()
+        {
+            Time.timeScale = 0f;
+            settingPanel.SetActive(true);
+
+        }
+        
+        public void ClosesettingButton()
+        {
+            Time.timeScale = 1f;
+            settingPanel.SetActive(false);
 
         }
 

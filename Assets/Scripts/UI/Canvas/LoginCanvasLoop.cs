@@ -18,9 +18,10 @@ namespace Yunash.UI
 
         public GameObject gameOverPanel;
         public GameObject pausePanel;
+        public GameObject settingPanel;
 
 
-       
+
         private void Awake()
         {
             if (Instance == null)
@@ -39,6 +40,7 @@ namespace Yunash.UI
             gamePanel.SetActive(true);
             gameOverPanel.SetActive(false);
             pausePanel.SetActive(false);
+            settingPanel.SetActive(false);
             audioManager = FindObjectOfType<AudioManager>();
 
            
@@ -94,7 +96,20 @@ namespace Yunash.UI
 
         }
 
-       
+
+        public void OpensettingButton()
+        {
+            Time.timeScale = 0f;
+            settingPanel.SetActive(true);
+
+        }
+
+        public void ClosesettingButton()
+        {
+            Time.timeScale = 1f;
+            settingPanel.SetActive(false);
+
+        }
 
         private IEnumerator DeactivateGamePanelWithDelay()
         {
