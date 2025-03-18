@@ -93,15 +93,14 @@ public class Chessman : MonoBehaviour
 
     private void OnMouseUp()
     {
+        Debug.Log("Piece clicked: " + this.name);
         if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetCurrentPlayer() == player)
         {
-           
             DestroyMovePlates();
-
-            
             InitiateMovePlates();
         }
     }
+
 
     public void DestroyMovePlates()
     {
@@ -115,10 +114,12 @@ public class Chessman : MonoBehaviour
 
     public void InitiateMovePlates()
     {
+        Debug.Log("InitiateMovePlates called for: " + this.name);
         switch (this.name)
         {
             case "black_queen":
             case "white_queen":
+                Debug.Log("Queen movement triggered");
                 LineMovePlate(1, 0);
                 LineMovePlate(0, 1);
                 LineMovePlate(1, 1);
@@ -130,10 +131,12 @@ public class Chessman : MonoBehaviour
                 break;
             case "black_knight":
             case "white_knight":
+                Debug.Log("Knight movement triggered");
                 LMovePlate();
                 break;
             case "black_bishop":
             case "white_bishop":
+                Debug.Log("Bishop movement triggered");
                 LineMovePlate(1, 1);
                 LineMovePlate(1, -1);
                 LineMovePlate(-1, 1);
@@ -141,23 +144,28 @@ public class Chessman : MonoBehaviour
                 break;
             case "black_king":
             case "white_king":
+                Debug.Log("King movement triggered");
                 SurroundMovePlate();
                 break;
             case "black_rook":
             case "white_rook":
+                Debug.Log("Rook movement triggered");
                 LineMovePlate(1, 0);
                 LineMovePlate(0, 1);
                 LineMovePlate(-1, 0);
                 LineMovePlate(0, -1);
                 break;
             case "black_pawn":
+                Debug.Log("Black Pawn movement triggered");
                 PawnMovePlate(xBoard, yBoard - 1);
                 break;
             case "white_pawn":
+                Debug.Log("White Pawn movement triggered");
                 PawnMovePlate(xBoard, yBoard + 1);
                 break;
         }
     }
+
 
     public void LineMovePlate(int xIncrement, int yIncrement)
     {
@@ -166,18 +174,26 @@ public class Chessman : MonoBehaviour
         int x = xBoard + xIncrement;
         int y = yBoard + yIncrement;
 
+        Debug.Log(this.name + " trying to move in direction: " + xIncrement + "," + yIncrement);
+
         while (sc.PositionOnBoard(x, y) && sc.GetPosition(x, y) == null)
         {
+            Debug.Log("Move available at: " + x + ", " + y);
             MovePlateSpawn(x, y);
             x += xIncrement;
             y += yIncrement;
         }
 
-        if (sc.PositionOnBoard(x, y) && sc.GetPosition(x, y).GetComponent<Chessman>().player != player)
+        if (sc.PositionOnBoard(x, y) && sc.GetPosition(x, y) != null)
         {
-            MovePlateAttackSpawn(x, y);
+            Debug.Log("Piece encountered at: " + x + ", " + y);
+            if (sc.GetPosition(x, y).GetComponent<Chessman>().player != player)
+            {
+                MovePlateAttackSpawn(x, y);
+            }
         }
     }
+
 
     public void LMovePlate()
     {
@@ -258,18 +274,22 @@ public class Chessman : MonoBehaviour
         Game sc = controller.GetComponent<Game>();
         if (sc.PositionOnBoard(x, y))
         {
+            Debug.Log(this.name + " trying to move to: " + x + ", " + y);
             GameObject cp = sc.GetPosition(x, y);
 
             if (cp == null)
             {
+                Debug.Log("Move available at: " + x + ", " + y);
                 MovePlateSpawn(x, y);
             }
             else if (cp.GetComponent<Chessman>().player != player)
             {
+                Debug.Log("Enemy piece found at: " + x + ", " + y);
                 MovePlateAttackSpawn(x, y);
             }
         }
     }
+
 
     public void PawnMovePlate(int x, int y)
     {
@@ -305,6 +325,7 @@ public class Chessman : MonoBehaviour
         x += -1.8f;
         y += -2.3f;
 
+        Debug.Log("Instantiating Move Plate at " + x + ", " + y);
         GameObject mp = Instantiate(movePlate, new Vector3(x - 0.15f, y, -1.0f), Quaternion.identity);
 
 
@@ -325,6 +346,7 @@ public class Chessman : MonoBehaviour
         x += -1.8f;
         y += -2.3f;
 
+        Debug.Log("Instantiating Move Plate at " + x + ", " + y);
         GameObject mp = Instantiate(movePlate, new Vector3(x - 0.15f, y, -1.0f), Quaternion.identity);
 
         MovePlate mpScript = mp.GetComponent<MovePlate>();
@@ -336,14 +358,23 @@ public class Chessman : MonoBehaviour
     //
     public bool ValidMove(int x, int y)
     {
-        if (!controller.GetComponent<Game>().PositionOnBoard(x, y)) return false;
+        if (!controller.GetComponent<Game>().PositionOnBoard(x, y))
+        {
+            Debug.Log("Invalid move: Outside board bounds");
+            return false;
+        }
 
         GameObject target = controller.GetComponent<Game>().GetPosition(x, y);
         if (target == null || target.GetComponent<Chessman>().player != this.player)
+        {
+            Debug.Log("Valid move to: " + x + ", " + y);
             return true;
+        }
 
+        Debug.Log("Invalid move: Occupied by same player");
         return false;
     }
+
     //
 
 }
